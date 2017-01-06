@@ -190,20 +190,20 @@ function none()end
 -- ============================
 -- ship movements
 
-function cross(i,h,ve)
+function cross(i,h)
  h.x+=h.u*h.s h.y+=h.v*h.s end
 
-function retreat(i,h,ve)
+function retreat(i,h)
  h.v=mid(-0.1,h.v-0.05,-1)
  --xxx: should work now
  --flee(i,h,ve)
  h.x+=h.u*h.s h.y+=h.v*h.s end
 
-function curve(i,h,ve)
+function curve(i,h)
  h.x+=h.u*h.s h.y+=h.v*h.s
  h.u,h.v=rot(h.u,h.v,h.t) end
 
-function flee(i,h,ve)
+function flee(i,h)
  dx=ve.x-h.x
  h.u=-dx*0.01 h.v+=0.03
  --xxx: should work now
@@ -211,7 +211,7 @@ function flee(i,h,ve)
  --deleteme
  h.x+=h.u*h.s h.y+=h.v*h.s end
 
-function target(i,h,ve)
+function target(i,h)
  x=ve.x
  if(h.u==0)h.u=0.2
  if(h.x>x+6)h.u=-abs(h.u)
@@ -219,7 +219,7 @@ function target(i,h,ve)
  cross(i,h,ve) end
 
 -- xxx: not used
---function keepdistance(i,h,ve)
+--function keepdistance(i,h)
 -- local dx=ve.x-h.x
 -- h.u=-(64-dx)*0.05
 -- h.x+=h.u*h.s
@@ -232,9 +232,10 @@ function target(i,h,ve)
 function arc(
 a,--0.5..0=circle,point
 s)--spirale
-return function(i,q,j,x,y,f)
+return function(i,q,j,f)
  h=q.h
  m,n=h.u,h.v
+ local x,y=ve.x,ve.y
  if(q.w)m,n=aim(h.x,h.y,x,y)
  r=(((2*j)-1)/q.c-1)*a
  u,v=rot(m,n,r+(q.z*s))
@@ -763,7 +764,7 @@ function damage(h,v,qs,ve,ui)
   if h.b>0
   then h.b-=v h.d=6
   else
-   kill(h,qs,ve,ui)
+   kill(h)
    locald(h.x,h.y,h.r/2,h.r/100)
   end
  end
@@ -773,7 +774,7 @@ function locald(x,y,s,z)
  l=lo[lo.g] next(lo,0)
  l.x,l.y,l.s,l.z=x,y,s,z end
 
-function kill(h,qs,ve,ui)
+function kill(h)
  effect(h.x,h.y,explosion)
  sfx(5)
  h.b,h.m,h.a=0,none,false
@@ -806,7 +807,7 @@ function kill(h,qs,ve,ui)
  end
 end
 
-function dead(ve)
+function dead()
  ve.a,ve.b,ve.l=false,false,false
  effect(ve.x,ve.y,die,0)
  ve.x,ve.y=0,140
@@ -1095,7 +1096,7 @@ function upd()
     h.m,h.x,h.a
     =none,-128,false
    else
-    h.m(i,h,ve)
+    h.m(i,h)
     spr(h.f,h.x-8,h.y-7,1,2)
     spr(h.f,h.x,h.y-7,1,2,true)
     if h.d>0 then
@@ -1115,9 +1116,8 @@ function upd()
    if q.d>0 then q.d-=1
    else q.d=q.e
     for j=1,q.c do
-     -- TODO: remove ve.x,ve.y
      a,x,y,u,v
-     =q.n(i,q,j,ve.x,ve.y,w)
+     =q.n(i,q,j,w)
      if(ve.a)shoot(x,y,u,v,q.f,q.m)
      q.h.c+=1 end
     q.t=(q.t==1)and -1or q.t-1
@@ -1151,8 +1151,8 @@ function upd()
   f.z+=1
  end
  -- update,draw vessel
-  spr(32,ve.x-8,ve.y-11,1,2)
-  spr(32,ve.x,ve.y-11,1,2,true)
+ spr(32,ve.x-8,ve.y-11,1,2)
+ spr(32,ve.x,ve.y-11,1,2,true)
  -- update beam
  if ve.b then
   if be.d==0 then
@@ -1230,7 +1230,6 @@ function upd()
     end
    end
   end
-
   if hh then
    effect(x,yy+16,lazer)
    i,t=j,yy+6
@@ -1275,7 +1274,7 @@ function upd()
   b.m(i,b)
   local d=dis(b.x-3,b.y-3,ve.x-4,ve.y-3)
   if ve.a and d>0 then
-   if(d<6)dead(ve)
+   if(d<6)dead()
    if(d<200)ve.d=true power(ve,0.375)
   end
   if b.x<-72 or b.x>72
