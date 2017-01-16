@@ -181,6 +181,15 @@ end
 
 function none()end
 
+function vepos()
+ if lpa then
+--  lp[lp.i]={ve.x,ve.y}
+--  lp.i=(lp.i%4)+1  
+ else
+  return ve.x,ve.y
+ end
+end
+
 -- ============================
 -- bullet movements
 
