@@ -4,6 +4,18 @@ __lua__
 -- mademoiselle danmaku 0.21
 -- martin mauchauffee
 
+-- todo: make the red lazer
+-- faster (less frame)
+
+-- todo: add a special sound
+-- for red lazer
+
+-- todo: add moar effect for
+-- red lazer
+
+-- todo: make the bullet speed
+-- faster when using red lazer
+
 -- todo: prevent ship shoot
 -- bullets after vessel dead
 -- when below a certain y
@@ -1935,4 +1947,3 @@ __music__
 00 41424344
 00 41424344
 00 41424344
-
