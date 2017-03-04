@@ -1103,6 +1103,8 @@ end
 
 function present()
  local s=0
+ local c={}
+ c.x,c.y,c.u,c.v,c.o,c.c=0,0,0,1,7,0
  return cocreate(function()
   while true do
    cls(1)
@@ -1124,8 +1126,11 @@ function present()
    if(s>39)print("uncomprehensible zero",-48,45,13)
    if(s>44)print("bomber fighter",-48,51,13)
    if(s>65)spr(192,10,23)spr(193,11,15)
-   if(s==75)
-   if(s<75)s=s+1
+   if s==75 then
+    fire(c,11,2,5,arc(0.5,0),none,0.5,3,false)
+   elseif s<75 then
+    s=s+1
+   end
    yield()
   end
 	end) 
@@ -1142,6 +1147,8 @@ function play()
   coresume(anim)
  end
  upd()
+ -- update level,spawn ship
+ level() le.z+=1
 end
 
 function title()
@@ -1151,6 +1158,7 @@ function title()
  if anim and costatus(anim) then
   coresume(anim)
  end
+ rnd()
 end
 
 function ctr()
@@ -1180,6 +1188,51 @@ function ctr()
  lp.i=(lp.i%4)+1
  ve.x=mid(-60,60,ve.x+ve.u)
  ve.y=mid(4,126,ve.y+ve.v)
+end
+
+function rnd()
+ -- update shape,shoot bullet
+ for i=1,qs.l do
+  q=qs[i] q.z+=1
+  if q.t>0 then
+   w=ang(q.h.x,q.h.y,ve.x,ve.y)
+   if q.d>0 then q.d-=1
+   else q.d=q.e
+    for j=1,q.c do
+     a,x,y,u,v
+     =q.n(i,q,j,w)
+     if(ve.a)shoot(x,y,u,v,q.f,q.m)
+     q.h.c+=1 end
+    q.t=(q.t==1)and -1or q.t-1
+   end
+  end
+ end
+ -- update particle
+ for i=0,pp.l do
+  local p=pp[i]
+  p.f(i,p) p.z+=1
+ end
+ -- draw particles
+ for i=1,32 do
+  local b=bp[i]
+  b.f(i,b)
+  circfill(b.x,b.y,b.r,b.c)
+  b.z+=1
+ end
+ for i=1,32 do
+  local s,f=sp[i],fp[i]
+  s.f(i,s)
+  spr(s.t+s.a,s.x-3,s.y-3)
+  pal()
+  if s.d==0 then
+   s.d=1
+   s.a=(s.a==3)and 0or s.a+1
+  else s.d-=1 end
+  s.z+=1
+  f.f(i,f)
+  circfill(f.x,f.y,f.r,f.c)
+  f.z+=1
+ end
 end
 
 function upd()
@@ -1222,8 +1275,6 @@ function upd()
   pal()
   wa+=1
  end
- -- update level,spawn ship
- level() le.z+=1
  -- update,draw boss
  if le.bo then
   -- hp
@@ -1283,48 +1334,7 @@ function upd()
    end
   end
  end
- -- update shape,shoot bullet
- for i=1,qs.l do
-  q=qs[i] q.z+=1
-  if q.t>0 then
-   w=ang(q.h.x,q.h.y,ve.x,ve.y)
-   if q.d>0 then q.d-=1
-   else q.d=q.e
-    for j=1,q.c do
-     a,x,y,u,v
-     =q.n(i,q,j,w)
-     if(ve.a)shoot(x,y,u,v,q.f,q.m)
-     q.h.c+=1 end
-    q.t=(q.t==1)and -1or q.t-1
-   end
-  end
- end
- -- update particle
- for i=0,pp.l do
-  local p=pp[i]
-  p.f(i,p) p.z+=1
- end
- -- draw particles
- for i=1,32 do
-  local b=bp[i]
-  b.f(i,b)
-  circfill(b.x,b.y,b.r,b.c)
-  b.z+=1
- end
- for i=1,32 do
-  local s,f=sp[i],fp[i]
-  s.f(i,s)
-  spr(s.t+s.a,s.x-3,s.y-3)
-  pal()
-  if s.d==0 then
-   s.d=1
-   s.a=(s.a==3)and 0or s.a+1
-  else s.d-=1 end
-  s.z+=1
-  f.f(i,f)
-  circfill(f.x,f.y,f.r,f.c)
-  f.z+=1
- end
+ rnd()
  -- update,draw vessel
  if ve.g and le.z%4>1 then
   pal(10,7) pal(9,7)
