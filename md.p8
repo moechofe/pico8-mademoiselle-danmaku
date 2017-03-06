@@ -244,9 +244,8 @@ end
 end
 
 function roundinf(i,b)
- printh("jh")
- b.u*=1.03
- b.v*=1.03
+ b.u*=1.04
+ b.v*=1.04
 end
 
 -- ============================
@@ -818,6 +817,17 @@ function die(i,p)
  end
 end
 
+function palrot(from,to)
+local a,l=1,#to
+return function(s)
+ for i,c in pairs(from) do
+  --printh("Pal:"..i..">"..(i+a)%l+1)
+  pal(from[i],to[flr((i+a))%l+1])
+ end
+ a=a%l+s
+end
+end
+
 -- ============================
 -- ennemy function
 
@@ -1111,7 +1121,10 @@ function present()
  local s,c,d=0,{},{}
  c.x,c.y,c.u,c.v,c.o,c.c
  =14,26,0,1,7,0
- fire(c,8,2,29999,arc(0.5,.02),roundinf,1,1,false)
+ d.x,d.y,d.u,d.v,d.o,d.c
+ =-4,103,0,1,4,0
+ fire(d,3,3,20000,arc(.5,.05),roundinf,.4,4,false)
+ fire(c,8,2,10000,arc(.5,.03),roundinf,1,1,false)
  return cocreate(function()
   while true do
    --line(-64,35,64,35,0)
@@ -1135,7 +1148,7 @@ function present()
    if(s>44)rectfill(-49,50,-25,56,1)rectfill(-21,50,7,56,1)print("bomber fighter",-48,51,13)
    --if(s>65)spr(192,10,23)spr(193,11,15)
    rectfill(-12,99,12,105,1)
-   print("—play",-11,100,7)
+   print("ï¿½play",-11,100,7)
    if(s<75)s=s+1
    yield()
   end
@@ -1157,12 +1170,15 @@ function play()
  level() le.z+=1
 end
 
+titlerotpal=palrot({1,2,14},{1,2,14,15,13,12})
+
 function title()
  if not anim then
   anim=present()
  end
  cls(1)
  pat(true)
+ titlerotpal(0.2)
  pal(1,0)
  bul()
  pal()
