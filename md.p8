@@ -4,24 +4,11 @@ __lua__
 -- mademoiselle danmaku 0.21
 -- martin mauchauffee
 
--- todo: collision with boss
-
--- todo: do not update
--- difficulty during boss
-
--- todo: local damage is too long
-
--- todo: make the red lazer
--- faster (less frame)
-
 -- todo: add a special sound
 -- for red lazer
 
 -- todo: add moar effect for
 -- red lazer
-
--- todo: make the bullet speed
--- faster when using red lazer
 
 -- todo: prevent ship shoot
 -- bullets after vessel dead
@@ -29,12 +16,6 @@ __lua__
 
 -- todo: vessel should no gain
 -- lazer when dead
-
--- todo: make the lazer moar
--- powerfull when it's red
-
--- todo: update conductor when
--- lazer red is used
 
 -- todo: add a timer for boss
 
@@ -891,7 +872,7 @@ function damage(h,v,qs,ve,ui)
   else
    kill(h)
    locald(h.x,h.y,h.r/2,h.r/100)
-   co.ss=min(1400,co.ss+10)
+   --co.ss=min(1400,co.ss+10)
   end
  end
 end
@@ -931,7 +912,7 @@ function kill(h)
   ui.t=0
   --ui.p=20
  end
- co.hb=min(1300,co.hb+10)
+ --co.hb=min(1300,co.hb+10)
 end
 
 function dead()
@@ -939,9 +920,9 @@ function dead()
  effect(ve.x,ve.y,die,0)
  ve.x,ve.y=0,140
  anim=arrive(110)
- co.ss=max(700,co.ss-150)
- co.sc=max(500,co.sc-200)
- co.hb=max(600,co.hb-100)
+ --co.ss=max(700,co.ss-150)
+ --co.sc=max(500,co.sc-200)
+ --co.hb=max(600,co.hb-100)
 end
 
 -- ============================
@@ -1266,7 +1247,7 @@ function bul()
    if d<200 then
     ve.d=true
     power(ve,0.375)
-    co.sc=min(1500,co.sc+1)
+    --co.sc=min(1500,co.sc+1)
    end
   end
   if b.x<-72 or b.x>72
@@ -1352,6 +1333,9 @@ function upd()
   spr(132,x,y-16,4,4,true)
   spr(136,x,y+0,4,2,true)
   spr(140,x,y+16,4,2,true)
+  -- check collision with boss
+  --d=dis(bo.x,bo.y,ve.x,ve.y)
+  --if(d<400)dead()
  end
  -- update,draw ship
  for i=1,hs.l do
@@ -1439,7 +1423,6 @@ function upd()
   yy,hh=-99,false
   if le.bo then
    -- collision with boss
---   pset(bo.x,bo.y,4)
    if bo.x>x-30 and bo.x<x+31 then
     sfx(2)
     hh,yy=bo,bo.y-10
@@ -1497,7 +1480,7 @@ function upd()
  for i=1,lo.l do
   l=lo[i]
   if l.z>0 then
-   l.z-=1
+   l.z-=3
    for j=1,hs.l do
     local h=hs[j]
     if h.a
@@ -1591,7 +1574,7 @@ function _draw()
   print("m"..flr(stat(0)).." c"..flr(stat(1)*1000)/1000,18,1,7)
   print("z"..le.z..">"..flr(le.a),18,7,9)
   print(err,-57,122,8)
-  print("speed:"..co.ss.." count:"..co.sc.." hp"..co.hb,-60,30,10)
+  --print("speed:"..co.ss.." count:"..co.sc.." hp"..co.hb,-60,30,10)
 
   x,y=le.a%128,flr(le.a/128)
   map(x-8,y,-68,17,32,1)
