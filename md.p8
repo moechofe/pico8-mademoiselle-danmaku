@@ -961,7 +961,7 @@ function kill(h)
    end
   end
   extend(i)
-  ui.i=50
+  hitd=50
  else
   for i=1,3 do ui.c[i]=0 end
   ui.t=0
@@ -1078,7 +1078,7 @@ function reset(lvl)
  -- ui
  for i=1,9 do ui.d[i]=112 ui.s[i]=0 end
  for i=1,3 do ui.c[i]=0 end
- ui.p,ui.h,ui.i,ui.t=20,0,0,0
+ ui.p,ui.h,hitd,ui.t=20,0,0,0
  -- x,y=position
  -- u,v=target position
  -- s=speed
@@ -1331,11 +1331,11 @@ function upd()
   end
  end
  -- draw hit
- if ui.i>0 then
-  if ui.i>48 then
+ if hitd>0 then
+  if hitd>48 then
    pal(2,7)pal(14,5)pal(4,5)
   end
-  ui.i-=1
+  hitd-=1
   for i=1,3 do
    spr(64+ui.c[i],-72+i*9,1,1,2)
   end
