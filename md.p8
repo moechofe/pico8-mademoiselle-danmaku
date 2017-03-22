@@ -4,6 +4,15 @@ __lua__
 -- mademoiselle danmaku 0.22
 -- martin mauchauffee
 
+-- toto: rename hit by multiply
+
+-- todo: lazer red should give
+-- moar multiply
+
+-- todo: remove the score multi
+-- plyer that depend on the 
+-- livetime of the ship
+
 -- todo: make hit flash when
 -- increased
 
@@ -188,10 +197,10 @@ co.ss=1000 -- shape speed multiplyer
 co.sc=1000 -- shape count multiplyer
 co.hb=1000 -- ship hp multiplyer
 ui={} -- ui
-ui.d={} -- digit for score
-ui.s={} -- score per digits
-ui.c={} -- digit for hit
-ui.t=0 -- hit counter
+scog={} -- digit for score
+scos={} -- score per digits
+hitg={} -- digit for hit
+hitv=0 -- hit counter
 lo={} -- local damage
 lo.g=1
 lo.l=16
@@ -944,18 +953,18 @@ function kill(h)
  if(h.q>0)qs[h.q].t=0
  if ve.p<ui.p-3 then
   effect(h.x,h.y,hit(h.r))
-  if ui.t<999 then
-   ui.t+=1
-   if ui.c[3]<9 then
-    ui.c[3]+=1
+  if hitv<999 then
+   hitv+=1
+   if hitg[3]<9 then
+    hitg[3]+=1
    else
-    ui.c[3]=0
-    if ui.c[2]<9 then
-     ui.c[2]+=1
+    hitg[3]=0
+    if hitg[2]<9 then
+     hitg[2]+=1
     else
-     ui.c[2]=0
-     if ui.c[1]<9 then
-      ui.c[1]+=1
+     hitg[2]=0
+     if hitg[1]<9 then
+      hitg[1]+=1
      end
     end
    end
@@ -963,8 +972,8 @@ function kill(h)
   extend(i)
   hitd=50
  else
-  for i=1,3 do ui.c[i]=0 end
-  ui.t=0
+  for i=1,3 do hitg[i]=0 end
+  hitv=0
   --ui.p=20
  end
  --co.hb=min(1300,co.hb+10)
@@ -1007,7 +1016,7 @@ function front(x,y,r,c,f)
 -- gameplay
 
 function sco(h)
- s,i,d=ui.s,9,ui.d
+ s,i,d=scos,9,scog
  if(h<0)err="sco>32787" return
  while h>0 do
   a=h%10
@@ -1021,7 +1030,7 @@ function power(v,p)
  and le.z%5==0 then
   effect(ve.x,ve.y,dart)
  end
- v.p=min(ui.p,v.p+p+ui.t/100)
+ v.p=min(ui.p,v.p+p+hitv/100)
 end
 
 function extend(p)
@@ -1076,9 +1085,9 @@ function reset(lvl)
  1,0,1,arc,0,0,none,0,1,false,
  0,0,1,false,0
  -- ui
- for i=1,9 do ui.d[i]=112 ui.s[i]=0 end
- for i=1,3 do ui.c[i]=0 end
- ui.p,ui.h,hitd,ui.t=20,0,0,0
+ for i=1,9 do scog[i]=112 scos[i]=0 end
+ for i=1,3 do hitg[i]=0 end
+ ui.p,ui.h,hitd,hitv=20,0,0,0
  -- x,y=position
  -- u,v=target position
  -- s=speed
@@ -1315,7 +1324,7 @@ function upd()
  ve.d=false
  -- draw score
  for i=1,9 do
-  spr(ui.d[i],i*7-8,1)
+  spr(scog[i],i*7-8,1)
  end --pal()palt()
  -- draw lazerbar
  spr(74,-65,122-ui.p)
@@ -1337,7 +1346,7 @@ function upd()
   end
   hitd-=1
   for i=1,3 do
-   spr(64+ui.c[i],-72+i*9,1,1,2)
+   spr(64+hitg[i],-72+i*9,1,1,2)
   end
   spr(76,-36,1,2,2)
   pal()
