@@ -179,7 +179,6 @@ ps={} -- patterns
 ps.g,ps.l=1,8
 hs={} -- ships
 hs.g,hs.l=1,16
-bo={} -- boss
 ve={} -- vessel
 be={} -- beam
 be.g,be.l=1,16
@@ -192,7 +191,6 @@ bp={} -- back circle particle
 bp.g,bp.l=11,32
 fp={} -- front circle particl
 fp.g,fp.l=21,32
-le={} -- level
 coss=1000 -- shape speed multiplyer
 cosc=1000 -- shape count multiplyer
 cohb=1000 -- ship hp multiplyer
@@ -204,6 +202,7 @@ hitv=0 -- hit counter
 lo={} -- local damage
 lo.g=1
 lo.l=16
+bo={} -- boss cannon
 err="" -- message
 wa=0 -- warning message
 
@@ -225,11 +224,11 @@ function bcount(c)
 -- bullet movements
 
 function roundexpl(r,m)
-local z=le.z
+local z=lez
 local a
 return function(i,b)
- err="z:"..(le.z-z)
- local a=le.z-z
+ err="z:"..(lez-z)
+ local a=lez-z
  if a<m then
   b.u,b.v=rot(b.u,b.v,r)
  elseif a==m then
@@ -351,9 +350,9 @@ end
 -- level
 
 function apply(t)
- if(#le.h<1)return
- for i in all(le.h)do
-  if le.bo then
+ if(#leh<1)return
+ for i in all(leh)do
+  if boss then
    h=bo[i]
   else
    h=hs[i]
@@ -386,16 +385,16 @@ function apply(t)
     h.m=target
    --fire shape
    elseif t>=1 and t<=4 then
-    local s=le.bn
+    local s=lebn
     if s==arc then
-     s=s(le.aa,le.as)
+     s=s(leaa,leas)
     end
-    fire(h,le.c,le.d,le.t,s,
-    le.bm,le.bs,le.bf,le.w)
-    le.bt=1
+    fire(h,lec,led,let,s,
+    lebm,lebs,lebf,lew)
+    lebt=1
    end
    if t==46 or t==47 or t==63 or (t>=1 and t<=9) then
-    le.m=false
+    lem=false
    end
   end
  end
@@ -404,17 +403,17 @@ end
 
 function findt()
  for i=1,100 do
-  local x,y=(le.a+i)%128,(le.a+i)/128
+  local x,y=(lea+i)%128,(lea+i)/128
   if mget(x,y)==78 then
-   return flr(le.a+i)
+   return flr(lea+i)
   end
  end
 end
 
 function level()
- le.a+=0.25
- if flr(le.a)==le.a then
-  x,y=le.a%128,le.a/128
+ lea+=0.25
+ if flr(lea)==lea then
+  x,y=lea%128,lea/128
   t=mget(x,y)
 	 if t==111 then
     anim=false
@@ -430,113 +429,113 @@ function level()
    end
   --boss waiting position
   elseif t==94 then
-   if bo.x~=bo.u
-   or bo.y~=bo.v then
-    le.a-=1
+   if box~=bou
+   or boy~=bov then
+    lea-=1
    end
   --position and direction
   elseif t==40 then
-   if le.bo then
-    bo.u,bo.v=0,30
+   if boss then
+    bou,bov=0,30
    else
-    le.x,le.y=0,-18
-    le.u,le.v=0,1
+    lex,ley=0,-18
+    leu,lev=0,1
    end
   elseif t==41 then
-   if le.bo then
-    bo.u,bo.v=-25,30
+   if boss then
+    bou,bov=-25,30
    else
-    le.x,le.y=-40,-18
-    le.u,le.v=0,1
+    lex,ley=-40,-18
+    leu,lev=0,1
    end
   elseif t==42 then
-   if le.bo then
-    bo.u,bo.v=25,30
+   if boss then
+    bou,bov=25,30
    else
-    le.x,le.y=40,-18
-    le.u,le.v=0,1
+    lex,ley=40,-18
+    leu,lev=0,1
    end
   elseif t==43 then
-   if le.bo then
-    bo.u,bo.v=20,44
+   if boss then
+    bou,bov=20,44
    else
-    le.x,le.y=-70,-18
-    le.u,le.v=0.7,0.7
+    lex,ley=-70,-18
+    leu,lev=0.7,0.7
    end
   elseif t==44 then
-   if le.bo then
-    bo.u,bo.v=-20,44
+   if boss then
+    bou,bov=-20,44
    else
-    le.x,le.y=80,-18
-    le.u,le.v=-0.7,0.7
+    lex,ley=80,-18
+    leu,lev=-0.7,0.7
    end
   elseif t==56 then
-   if le.bo then
-    bo.u,bo.v=30,34
+   if boss then
+    bou,bov=30,34
    else
-    le.x,le.y=-82,40
-    le.u,le.v=1.0,0
+    lex,ley=-82,40
+    leu,lev=1.0,0
    end
   elseif t==57 then
-   if le.bo then
-    bo.u,bo.v=-30,34
+   if boss then
+    bou,bov=-30,34
    else
-    le.x,le.y=82,40
-    le.u,le.v=-1.0,0
+    lex,ley=82,40
+    leu,lev=-1.0,0
    end
   elseif t==58 then
-   if le.bo then
-    bo.u,bo.v=30,24
+   if boss then
+    bou,bov=30,24
    else
-    le.x,le.y=-82,20
-    le.u,le.v=1.0,0
+    lex,ley=-82,20
+    leu,lev=1.0,0
    end
   elseif t==59 then
-   if le.bo then
-    bo.u,bo.v=-30,24
+   if boss then
+    bou,bov=-30,24
    else
-    le.x,le.y=82,20
-    le.u,le.v=-1.0,0
+    lex,ley=82,20
+    leu,lev=-1.0,0
    end
   --ship movement
   elseif t==47 then
-   if(not apply(t))le.sm=cross
+   if(not apply(t))lesm=cross
   elseif t==46 then
-   if(not apply(t))le.sm=flee
+   if(not apply(t))lesm=flee
   elseif t==62 then
-   if(not apply(t))le.sm=target
+   if(not apply(t))lesm=target
   elseif t==45 then
    apply(t)
   --ship rotation
   elseif t==5 then
    if not apply(t) then
-    le.u,le.v=rot(le.u,le.v,-0.05)
+    leu,lev=rot(leu,lev,-0.05)
    end
   elseif t==6 then
    if not apply(t) then
-    le.u,le.v=rot(le.u,le.v,0.05)
+    leu,lev=rot(leu,lev,0.05)
    end
   --ship speed
   elseif t==7 then
-   if le.bo then
+   if boss then
     bo.s=0.25
    elseif not apply(t) then
-    le.ss=0.75
-    if(le.l==7)le.ss=0.85
+    less=0.75
+    if(lel==7)less=0.85
    end
   elseif t==8 then
-   if le.bo then
+   if boss then
     bo.s=0.5
    elseif not apply(t) then
-    le.ss=1
-    if(le.l==8)le.ss=1.5
+    less=1
+    if(lel==8)less=1.5
    end
   elseif t==9 then
-   if le.bo then
+   if boss then
     bo.s=1.5
    elseif not apply(t) then
-    le.ss=2
-    if(le.l==9)le.ss=2.5
+    less=2
+    if(lel==9)less=2.5
    end
   --boss hp
   elseif t==79 then
@@ -547,9 +546,9 @@ function level()
   --developer markers
   elseif t==24 then
    for ii=1,1000 do
-    local xx,yy=(le.a+ii)%128,(le.a+ii)/128
+    local xx,yy=(lea+ii)%128,(lea+ii)/128
     if mget(xx,yy)==25 then
-     le.a=flr(le.a+ii)
+     lea=flr(lea+ii)
      break
     end
    end
@@ -557,133 +556,133 @@ function level()
 
   --markers
   elseif t==78 then
-   if le.ma==0 then
-    le.ma=le.a
-    le.c,le.d,le.t=0,0,0
+   if lema==0 then
+    lema=lea
+    lec,led,let=0,0,0
    else
-    le.rk=le.a
-    le.a=le.ma
+    lerk=lea
+    lea=lema
    end
   --hp, score, ship frame
   elseif t==131 then
-   le.b,le.r,le.sf=5,550,131
+   leb,ler,lesf=5,550,131
   elseif t==147 then
-   le.b,le.r,le.sf=7,800,131
+   leb,ler,lesf=7,800,131
   elseif t==130 then
-   le.b,le.r,le.sf=12,1000,130
+   leb,ler,lesf=12,1000,130
   elseif t==146 then
-   le.b,le.r,le.sf=18,1500,130
+   leb,ler,lesf=18,1500,130
   elseif t==129 then
-   le.b,le.r,le.sf=30,3000,129
+   leb,ler,lesf=30,3000,129
   elseif t==145 then
-   le.b,le.r,le.sf=40,4000,129
+   leb,ler,lesf=40,4000,129
   elseif t==128 then
-   le.b,le.r,le.sf=70,8000,128
+   leb,ler,lesf=70,8000,128
   elseif t==144 then
-   le.b,le.r,le.sf=90,10000,128
+   leb,ler,lesf=90,10000,128
   --boss arrive! distance from canon
   elseif t==127 then
-   le.bo,wa=true,1
-   bo.x,bo.y=0,-50
-   bo.u,bo.v=0,30
+   boss,wa=true,1
+   box,boy=0,-50
+   bou,bov=0,30
   --arc angle
   elseif t==28 then
-   le.aa=0.5
+   leaa=0.5
   elseif t==29 then
-   le.aa=0.25
+   leaa=0.25
   elseif t==30 then
-   le.aa=0.125
+   leaa=0.125
   elseif t==31 then
-   le.aa=0.0625
+   leaa=0.0625
   --arc spirale
   elseif t==60 then
-   le.as-=0.01
+   leas-=0.01
   elseif t==61 then
-   le.as+=0.01
+   leas+=0.01
   --bullet movement
   elseif t==34 then
-   le.bm=none
+   lebm=none
   elseif t==35 then
    err="t==35"
   elseif t==50 then
    err="t==50"
   elseif t==16 then
-   le.bm=roundexpl(0.02,120)
+   lebm=roundexpl(0.02,120)
   elseif t==51 then
    lpa=true
   elseif t==90 then
    lpf=true
   --bullet frame, bullet speed
   elseif t==1 then
-   le.bf,le.bs=1,1.5
+   lebf,lebs=1,1.5
    apply(t)
   elseif t==2 then
-   le.bf,le.bs=2,3
+   lebf,lebs=2,3
    apply(t)
   elseif t==3 then
-   le.bf,le.bs=3,4
+   lebf,lebs=3,4
    apply(t)
   elseif t==4 then
-   le.bf,le.bs=4,2
+   lebf,lebs=4,2
    apply(t)
   --aim mode
   elseif t==33 then
-   le.w,lpa,lpf
+   lew,lpa,lpf
    =false,false,false
   elseif t==49 then
-   le.w,lpa,lpf
+   lew,lpa,lpf
    =true,false,false
   end
   --arc
   if t>=28 and t<=31 then
-   le.bn=arc
-   le.as=0
+   lebn=arc
+   leas=0
   --cancel selection
   elseif t==0 then
-   le.m=false
-   le.h={}
+   lem=false
+   leh={}
   --multiple selection
   elseif t==63 then
-   le.m=true
+   lem=true
   --select spawned ship
   elseif t>=10 and t<=15 then
-   if(not le.m)le.h={}
-   if le.bo then
+   if(not lem)leh={}
+   if boss then
     -- todo: put the ship object directly
-    add(le.h,(t-9))
+    add(leh,(t-9))
    else
     -- todo: put the ship object directly
-    add(le.h,(hs.g+8-t)%hs.l+1)
+    add(leh,(hs.g+8-t)%hs.l+1)
    end
   --spawn ship
   elseif (t>=128 and t<=131)
   or (t>=144 and t<=147) then
-   spawn(le.x,le.y,le.u,le.v,
-   le.sf,le.ss,5,le.sm,
-   le.b,le.r)
+   spawn(lex,ley,leu,lev,
+   lesf,less,5,lesm,
+   leb,ler)
   --count,delay,repeat x10
   elseif t>=96 and t<=105 then
    local v=(t-96)*10
-   if le.bt==1 then
-    le.c=v
-   elseif le.bt==2 then
-    le.d=v
-   elseif le.bt==3 then
-    le.t=v
+   if lebt==1 then
+    lec=v
+   elseif lebt==2 then
+    led=v
+   elseif lebt==3 then
+    let=v
    end
   --count,delay,repeat x1
   elseif t>=112 and t<=121 then
    local v=(t-112)
-   if le.bt==1 then
-    le.c=flr(le.c/10)*10+v
-   elseif le.bt==2 then
-    le.d=flr(le.d/10)*10+v
-   elseif le.bt==3 then
-    le.t=flr(le.t/10)*10+v
+   if lebt==1 then
+    lec=flr(lec/10)*10+v
+   elseif lebt==2 then
+    led=flr(led/10)*10+v
+   elseif lebt==3 then
+    let=flr(let/10)*10+v
    end
-   le.bt=le.bt%3+1
+   lebt=lebt%3+1
   end
-  le.l=t
+  lel=t
  end
 end
 
@@ -906,22 +905,22 @@ b,r)
  return h end
 
 function damage(h,v,qs,ve,ui)
- if le.bo then
+ if boss then
   if bo.b>0 then
    bo.b-=v
   elseif bo.a then
-   -- fixme le.rk can be nil
+   -- fixme lerk can be nil
    -- search for the next mark
    -- fixme avoid to overflow
    for i=1,100 do
-    local x,y=(le.a+i)%128,(le.a+i)/128
+    local x,y=(lea+i)%128,(lea+i)/128
     if mget(x,y)==78 then
-     le.rk=flr(le.a+i)
+     lerk=flr(lea+i)
      break
     end
    end
-   le.a=le.rk
-   le.rk,le.ma=0,0
+   lea=lerk
+   lerk,lema=0,0
    bo.m,bo.a,bo.i=0,false,4
    for i=1,6 do
     local b=bo[i]
@@ -1027,7 +1026,7 @@ function sco(h)
 
 function power(v,p)
  if v.p<uipo and p>0.125
- and le.z%5==0 then
+ and lez%5==0 then
   effect(ve.x,ve.y,dart)
  end
  v.p=min(uipo,v.p+p+hitv/100)
@@ -1050,7 +1049,7 @@ function reset(lvl)
  for i=1,4 do lp[i]={x=0,y=0} end
  -- z=level frame counter
  -- a=index of the tile to read
- le.z,le.a,le.bo,le.ma,le.rk
+ lez,lea,boss,lema,lerk
  =0,0,false,0,0
  --=0,384,false
  -- x,y=ship position
@@ -1076,11 +1075,11 @@ function reset(lvl)
  -- bf=bullet frame
  -- bt=bullet number state 1=count 2=delay 3=repeat
  -- l=old tile
- le.x,le.y,le.u,le.v,le.sm,
- le.ss,le.b,le.r,le.h,
- le.c,le.d,le.t,le.bn,le.aa,
- le.as,le.bm,le.bs,le.bz,le.w,
- le.sf,le.bf,le.bt,le.m,le.l
+ lex,ley,leu,lev,lesm,
+ less,leb,ler,leh,
+ lec,led,let,lebn,leaa,
+ leas,lebm,lebs,lebz,lew,
+ lesf,lebf,lebt,lem,lel
  =0,-82,0,1,cross,1,5,0,{},
  1,0,1,arc,0,0,none,0,1,false,
  0,0,1,false,0
@@ -1096,7 +1095,7 @@ function reset(lvl)
  -- m=max hp
  -- d=disp hp
  -- i=hp heal speed
- bo.x,bo.y,bo.u,bo.v,bo.s,bo.h,
+ box,boy,bou,bov,bo.s,bo.h,
  bo.b,bo.d,bo.m,bo.a,bo.i
  =0,-50,0,30,0.5,1,
  0,0,0,false,4
@@ -1112,17 +1111,17 @@ function reset(lvl)
   =true,0,1,10,0,0
  end
  -- todo: change dir of canon: u,v
- bo[1].x,bo[1].y=-20,bo.y-5
- bo[2].x,bo[2].y=20,bo.y-5
- bo[3].x,bo[3].y=-22,bo.y+10
- bo[4].x,bo[4].y=22,bo.y+10
- bo[5].x,bo[5].y=0,bo.y-8
- bo[6].x,bo[6].y=0,bo.y+14
+ bo[1].x,bo[1].y=-20,boy-5
+ bo[2].x,bo[2].y=20,boy-5
+ bo[3].x,bo[3].y=-22,boy+10
+ bo[4].x,bo[4].y=22,boy+10
+ bo[5].x,bo[5].y=0,boy-8
+ bo[6].x,bo[6].y=0,boy+14
  wa=0
 end
 
-function mhere()dset(63,le.a)run()end
-function mhind()dset(63,max(0,le.a-8))run()end
+function mhere()dset(63,lea)run()end
+function mhind()dset(63,max(0,lea-8))run()end
 function mrese()dset(63,0)run()end
 
 function arrive(wait)
@@ -1223,7 +1222,7 @@ function play()
  end
  upd()
  -- update level,spawn ship
- level() le.z+=1
+ level() lez+=1
 end
 
 titlerotpal=palrot({1,2,14},{1,2,14,15,13,12})
@@ -1389,7 +1388,7 @@ function upd()
   wa+=1
  end
  -- update,draw boss
- if le.bo then
+ if boss then
   -- hp
   d=bo.b-bo.d
   if d>4 then
@@ -1404,21 +1403,21 @@ function upd()
    rectfill(-58,18,bo.d/bo.m*116-58,20,14)
   end
   -- compute direction using target
-  bd=dis(bo.x,bo.y,bo.u,bo.v)
+  bd=dis(box,boy,bou,bov)
   if bd<-1 or bd>1 then
-   bu,bv=nor(aim(bo.x,bo.y,bo.u,bo.v))
+   bu,bv=nor(aim(box,boy,bou,bov))
    bu,bv=bu*bo.s,bv*bo.s
-   bo.x+=bu
-   bo.y+=bv
+   box+=bu
+   boy+=bv
    for i=1,6 do
     bo[i].x+=bu
     bo[i].y+=bv
    end
   else
-   bo.x=bo.u
-   bo.y=bo.v
+   box=bou
+   boy=bov
   end
-  x,y=bo.x,bo.y
+  x,y=box,boy
   spr(132,x-32,y-16,4,2)
   spr(136,x-32,y+0,4,2)
   spr(140,x-32,y+16,4,2)
@@ -1449,7 +1448,7 @@ function upd()
  end
  pat()
  -- update,draw vessel
- if ve.g and le.z%4>1 then
+ if ve.g and lez%4>1 then
   pal(10,7) pal(9,7)
   pal(4,7) pal(12,7)
   pal(13,7) pal(1,7)
@@ -1478,10 +1477,10 @@ function upd()
  for i=1,be.l do
   b=be[i]
   if b.y>-16 then
-   spr(36+((i+le.z)%2),b.x,b.y,1,2)
-   if le.bo then
+   spr(36+((i+lez)%2),b.x,b.y,1,2)
+   if boss then
     -- collision with boss
-    d=dis(bo.x-4,bo.y-8,b.x,b.y)
+    d=dis(box-4,boy-8,b.x,b.y)
     if d>0 and d<700 then
      if(not s2)sfx(2) s2=true
      effect(b.x+8,b.y+16,beam)
@@ -1510,15 +1509,15 @@ function upd()
  if ve.l then
   x,y,t,i=ve.x,ve.y,-16,false
   yy,hh=-99,false
-  if le.bo then
+  if boss then
    -- collision with boss
-   if bo.x>x-30 and bo.x<x+31 then
+   if box>x-30 and box<x+31 then
     sfx(2)
-    hh,yy=bo,bo.y-10
-    if bo.x>x-6 and bo.x<x+7 then
-     yy=bo.y+10
-    elseif bo.x>x-20 and bo.x<x+21 then
-     yy=bo.y+4
+    hh,yy=bo,boy-10
+    if box>x-6 and box<x+7 then
+     yy=boy+10
+    elseif box>x-20 and box<x+21 then
+     yy=boy+4
     end
    end
   else
@@ -1551,7 +1550,7 @@ function upd()
    sfx(7)
    damage(hh,ld,qs,ve,ui)
   end
-  local lh=(le.z%2==0)
+  local lh=(lez%2==0)
   sspr(48,21,16,3,x-la/2,t+16,la,y-t-24,lh,false)
   sspr(48,24,16,8,x-la/2,y-16,la,8,lh,false)
   if(hh)sspr(48,16,16,8,x-la/2,t+8,la,8,lh,false)
@@ -1645,7 +1644,7 @@ function _init()
   =0,-64,0,0,none,0
  end
  reset(1)
- if false then le.a=dget(63) end
+ if false then lea=dget(63) end
 end
 
 --function _update()end
@@ -1657,11 +1656,11 @@ function _draw()
 
  if false then -- debug
   print("m"..flr(stat(0)).." c"..flr(stat(1)*1000)/1000,18,1,7)
-  print("z"..le.z..">"..flr(le.a),18,7,9)
+  print("z"..lez..">"..flr(lea),18,7,9)
   print(err,-57,122,8)
   --print("speed:"..coss.." count:"..cosc.." hp"..cohb,-60,30,10)
 
-  x,y=le.a%128,flr(le.a/128)
+  x,y=lea%128,flr(lea/128)
   map(x-8,y,-68,17,32,1)
   spr(95,-7,14)
   spr(95,-2,14,1,1,true)
