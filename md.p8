@@ -4,6 +4,10 @@ __lua__
 -- mademoiselle danmaku 0.22
 -- martin mauchauffee
 
+-- todo: is retreat() used
+
+-- todo: what is vez
+
 -- todo: do not reduce hit
 -- when kill ship using beam
 
@@ -174,7 +178,6 @@ ps={} -- patterns
 ps.g,ps.l=1,8
 hs={} -- ships
 hs.g,hs.l=1,16
-ve={} -- vessel
 be={} -- beam
 be.g,be.l=1,16
 be.d,be.e,be.f=0,2,0
@@ -257,7 +260,7 @@ function curve(i,h)
  h.u,h.v=rot(h.u,h.v,h.t) end
 
 function flee(i,h)
- dx=ve.x-h.x
+ dx=vex-h.x
  h.u=-dx*0.01 h.v+=0.03
  --xxx: should work now
  --cross(i,h,ve) end
@@ -265,15 +268,15 @@ function flee(i,h)
  h.x+=h.u*h.s h.y+=h.v*h.s end
 
 function target(i,h)
- x=ve.x
+ x=vex
  if(h.u==0)h.u=0.2
  if(h.x>x+6)h.u=-abs(h.u)
  if(h.x<x-6)h.u=abs(h.u)
- cross(i,h,ve) end
+ cross(i,h) end
 
 -- xxx: not used
 --function keepdistance(i,h)
--- local dx=ve.x-h.x
+-- local dx=vex-h.x
 -- h.u=-(64-dx)*0.05
 -- h.x+=h.u*h.s
 -- h.y+=h.v*h.s
@@ -282,7 +285,7 @@ function target(i,h)
 -- return vessel position to aim at
 function vepos()
  if lpf then -- fixed
-  local x,y=ve.x,ve.y
+  local x,y=vex,vey
   return function()
    return x,y
   end
@@ -293,7 +296,7 @@ function vepos()
   end
  else -- current position
   return function()
-   return ve.x,ve.y
+   return vex,vey
   end
  end
 end
@@ -676,7 +679,7 @@ function lazer(i,p)
  else p.f=none end end
 
 function dart(i,p)
- u,v=-61,124-ve.p
+ u,v=-61,124-vep
  x,y=(p.x+u)/2,(p.y+v)/2
  if p.z==0 then
   line(p.x,p.y,x,y,12)
@@ -888,7 +891,7 @@ b,r)
  flr(b*(cohb/1000)),0,b,0,0,r,0
  return h end
 
-function damage(h,v,qs,ve)
+function damage(h,v,qs)
  if boss then
   if bob>0 then
    bob-=v
@@ -934,7 +937,7 @@ function kill(h)
  if(qs[h.q])qs[h.q].t=0
  sco(max(99,(h.c*333)-h.z+h.r))
  if(h.q>0)qs[h.q].t=0
- if ve.p<uipo-3 then
+ if vep<uipo-3 then
   effect(h.x,h.y,hit(h.r))
   if hitv<999 then
    hitv+=1
@@ -963,9 +966,9 @@ function kill(h)
 end
 
 function dead()
- ve.a,ve.b,ve.l=false,false,false
- effect(ve.x,ve.y,die,0)
- ve.x,ve.y=0,140
+ vea,veb,vel=false,false,false
+ effect(vex,vey,die,0)
+ vex,vey=0,140
  anim=arrive(110)
  --coss=max(700,coss-150)
  --cosc=max(500,cosc-200)
@@ -1008,12 +1011,12 @@ function sco(h)
   d[i]=112+s[i]
   h=flr(h/10) i-=1 end end
 
-function power(v,p)
- if v.p<uipo and p>0.125
+function power(p)
+ if vep<uipo and p>0.125
  and lez%5==0 then
-  effect(ve.x,ve.y,dart)
+  effect(vex,vey,dart)
  end
- v.p=min(uipo,v.p+p+hitv/100)
+ vep=min(uipo,vep+p+hitv/100)
 end
 
 function extend(p)
@@ -1021,9 +1024,9 @@ function extend(p)
 
 function reset(lvl)
  la=16
- ve.x,ve.y,ve.u,ve.v,ve.a,ve.b,
- ve.z,ve.d,ve.l,ve.s,ve.p,ve.w,
- ve.g
+ vex,vey,veu,vev,vea,veb,
+ vez,ved,vel,ves,vep,vew,
+ veg
  =0,140,0,0,false,false,0,false,
  false,3,10,40,false
  lp={}--late postion of vessels
@@ -1110,27 +1113,27 @@ function mrese()dset(63,0)run()end
 
 function arrive(wait)
  return cocreate(function()
-  ve.g=true
+  veg=true
   while wait>0 do
    wait-=1
    yield()
   end
-  ve.x,ve.y=0,140
-  while ve.y>101 do
-   ve.y+=max(-5,(100-ve.y)/3)
+  vex,vey=0,140
+  while vey>101 do
+   vey+=max(-5,(100-vey)/3)
    yield()
   end
-  while ve.y<117 do
-   ve.y+=min(3,(118-ve.y)/4)
+  while vey<117 do
+   vey+=min(3,(118-vey)/4)
    yield()
   end
-  ve.a=true
+  vea=true
   wait=30
   while wait>0 do
    wait-=1
    yield()
   end
-  ve.g=false
+  veg=false
   anim=false
  end)
 end
@@ -1197,7 +1200,7 @@ end
 
 anim=false
 function play()
- if ve.a then
+ if vea then
   ctr()
  elseif not anim then
   anim=arrive(10)
@@ -1225,31 +1228,31 @@ end
 
 function ctr()
  -- move vessel
- ve.u,ve.v=0,0
- if(btn(0))ve.u-=ve.s
- if(btn(1))ve.u+=ve.s
- if(btn(2))ve.v-=ve.s
- if(btn(3))ve.v+=ve.s
+ veu,vev=0,0
+ if(btn(0))veu-=ves
+ if(btn(1))veu+=ves
+ if(btn(2))vev-=ves
+ if(btn(3))vev+=ves
  -- shoot beam/lazer
- if ve.a and btn(4) then
-  if(not ve.l and ve.p>5.75)ve.l,ve.s=true,2 sfx(6,0) -- fixme: ve.s=2 !!!???
-  if(ve.p<0)ve.l,ve.s=false,3 sfx(-2,0)
+ if vea and btn(4) then
+  if(not vel and vep>5.75)vel,ves=true,2 sfx(6,0) -- fixme: ves=2 !!!???
+  if(vep<0)vel,ves=false,3 sfx(-2,0)
  else
-  if(ve.l)ve.l,ve.s=false,3 sfx(-2,0)
+  if(vel)vel,ves=false,3 sfx(-2,0)
  end
- if ve.a and btn(5) and not ve.l then
-  if(not ve.b)ve.b,ve.s=true,3 sfx(0,0)
+ if vea and btn(5) and not vel then
+  if(not veb)veb,ves=true,3 sfx(0,0)
  else
-  if ve.b then
-   ve.b,be.d=false,0
-   if(not ve.l)sfx(-2,0) ve.s=3
+  if veb then
+   veb,be.d=false,0
+   if(not vel)sfx(-2,0) ves=3
   end
  end
- lp[lp.i].x=ve.x
- lp[lp.i].y=ve.y
+ lp[lp.i].x=vex
+ lp[lp.i].y=vey
  lp.i=(lp.i%4)+1
- ve.x=mid(-60,60,ve.x+ve.u)
- ve.y=mid(4,126,ve.y+ve.v)
+ vex=mid(-60,60,vex+veu)
+ vey=mid(4,126,vey+vev)
 end
 
 function pat(canshoot)
@@ -1257,13 +1260,13 @@ function pat(canshoot)
  for i=1,qs.l do
   q=qs[i] q.z+=1
   if q.t>0 then
-   w=ang(q.h.x,q.h.y,ve.x,ve.y)
+   w=ang(q.h.x,q.h.y,vex,vey)
    if q.d>0 then q.d-=1
    else q.d=q.e
     for j=1,q.c do
      a,x,y,u,v
      =q.n(i,q,j,w)
-     if(ve.a or canshoot)shoot(x,y,u,v,q.f,q.m)
+     if(vea or canshoot)shoot(x,y,u,v,q.f,q.m)
      q.h.c+=1 end
     q.t=(q.t==1)and -1or q.t-1
    end
@@ -1304,14 +1307,14 @@ function bul()
   spr(b.f,b.x-3,b.y-3)
   b.x+=b.u b.y+=b.v
   b.m(i,b)
-  local d=dis(b.x-3,b.y-3,ve.x-4,ve.y-3)
-  if ve.a and d>0 and not ve.g then
+  local d=dis(b.x-3,b.y-3,vex-4,vey-3)
+  if vea and d>0 and not veg then
    if(d<6)dead()
    --todo reduce the distance
    --of touch
    if d<200 then
-    ve.d=true
-    power(ve,0.375)
+    ved=true
+    power(0.375)
     --cosc=min(1500,cosc+1)
    end
   end
@@ -1322,7 +1325,7 @@ function bul()
 end
 
 function upd()
- ve.d=false
+ ved=false
  -- draw score
  for i=1,9 do
   spr(scog[i],i*7-8,1)
@@ -1333,11 +1336,11 @@ function upd()
  line(-63,115,-63,126-uipo,1)
  line(-59,119,-59,130-uipo,1)
  for i=0,2 do
-  if ve.p>0.125 then
+  if vep>0.125 then
    c=12
-   if(ve.p<5)c=6
-   if(ve.p>uipo-3.25)c=8
-   line(-62+i,123+i,-62+i,123+i-ve.p,c)
+   if(vep<5)c=6
+   if(vep>uipo-3.25)c=8
+   line(-62+i,123+i,-62+i,123+i-vep,c)
   end
  end
  -- draw hit
@@ -1429,28 +1432,28 @@ function upd()
  end
  pat()
  -- update,draw vessel
- if ve.g and lez%4>1 then
+ if veg and lez%4>1 then
   pal(10,7) pal(9,7)
   pal(4,7) pal(12,7)
   pal(13,7) pal(1,7)
   pal(2,7) pal(5,7)
  end
- spr(32,ve.x-8,ve.y-11,1,2)
- spr(32,ve.x,ve.y-11,1,2,true)
+ spr(32,vex-8,vey-11,1,2)
+ spr(32,vex,vey-11,1,2,true)
  pal()
  -- update beam
- if ve.b then
+ if veb then
   if be.d==0 then
    be.d=be.e
    for j=0,1 do
     b=be[be.g]
     be.g=(be.g==be.l)and 1or be.g+1
-    b.x=ve.x-8*j
-    b.y=ve.y-24
+    b.x=vex-8*j
+    b.y=vey-24
    end
   else be.d-=1 end
-  spr(16+be.f,ve.x-11,ve.y-16)
-  spr(16+(be.f+2)%4,ve.x+3,ve.y-16,1,1,true)
+  spr(16+be.f,vex-11,vey-16)
+  spr(16+(be.f+2)%4,vex+3,vey-16,1,1,true)
   be.f=(be.f+1)%4
  end
  -- draw beam
@@ -1466,7 +1469,7 @@ function upd()
      if(not s2)sfx(2) s2=true
      effect(b.x+8,b.y+16,beam)
      b.y=-128
-     damage(bo,1,qs,ve)
+     damage(bo,1,qs)
     end
    else
     -- collision with ship
@@ -1478,7 +1481,7 @@ function upd()
        if(not s2)sfx(2) s2=true
        effect(b.x+8,b.y+16,beam)
        b.y=-128
-       damage(h,1,qs,ve)
+       damage(h,1,qs)
       end
      end
     end
@@ -1487,8 +1490,8 @@ function upd()
   end
  end
  -- draw lazer
- if ve.l then
-  x,y,t,i=ve.x,ve.y,-16,false
+ if vel then
+  x,y,t,i=vex,vey,-16,false
   yy,hh=-99,false
   if boss then
    -- collision with boss
@@ -1520,7 +1523,7 @@ function upd()
   end
   ld=1.4
   -- fixme: duplicated
-  if ve.p>uipo-3.25 then
+  if vep>uipo-3.25 then
    if(la==16)la=25
    ld=1.7
    pal(7,0)pal(12,8)pal(6,2)
@@ -1529,22 +1532,22 @@ function upd()
   la=max(16,la-1)
   if hh then
    sfx(7)
-   damage(hh,ld,qs,ve)
+   damage(hh,ld,qs)
   end
   local lh=(lez%2==0)
   sspr(48,21,16,3,x-la/2,t+16,la,y-t-24,lh,false)
   sspr(48,24,16,8,x-la/2,y-16,la,8,lh,false)
   if(hh)sspr(48,16,16,8,x-la/2,t+8,la,8,lh,false)
   pal()palt()
-  ve.p=max(-1,ve.p-1)
+  vep=max(-1,vep-1)
  else
-  power(ve,0.0625)
+  power(0.0625)
  end
  bul()
  -- draw vessel colision
- if ve.d then
-  ve.z=(ve.z==3)and 0or ve.z+1
-  spr(24+ve.z,ve.x-4,ve.y-3)
+ if ved then
+  vez=(vez==3)and 0or vez+1
+  spr(24+vez,vex-4,vey-3)
  end
  -- apply local damage
  for i=1,lo.l do
@@ -1556,7 +1559,7 @@ function upd()
     if h.a
     and dis(l.x,l.y,h.x,h.y)<l.s
     then
-     damage(h,2,qs,ve)
+     damage(h,2,qs)
     end
    end
   end
