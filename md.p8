@@ -101,11 +101,6 @@ __lua__
 -- shape function if the are
 -- below a specific line.
 
--- todo: distance from cannon
--- stored into ship object is
--- useless. it is always 5 for
--- ship and 10 for boss.
-
 -- ============================
 -- math
 
@@ -315,36 +310,13 @@ return function(i,q,j,f)
  h=q.h
  m,n=h.u,h.v
  local x,y=vepos()
+ local o=boss and 10 or 5
  if(q.w)m,n=aim(h.x,h.y,x,y)
  r=(((2*j)-1)/q.c-1)*a
  u,v=rot(m,n,r+(q.z*s))
- bx,by=h.x+u*(h.o),h.y+v*(h.o)
+ bx,by=h.x+u*o,h.y+v*o
  return true,bx,by,u*q.s,v*q.s end
 end
-
--- old shape functino
--- xxx: not used
---function chump(i,q,j,x,y,f)
--- h=q.h
--- x,y
--- =h.x+rnd(4)*3-6,h.y+h.o+9+rnd(4)*3-6*3
--- return true,x,y,h.u,h.v end
-
--- xxx: not used
---function scan(i,q,j,x,y,f)
--- h=q.h
--- r=j/q.c+(h.z%100)/100
--- u,v=rot(h.u,h.v,r*(q.z/100))
--- m,n=h.x+u*(h.o),h.y+v*(h.o)
--- return true,m,n,u*q.s,v*q.s end
-
--- todo: replace by arc()
---function spir(i,q,j,x,y,f)
--- h=q.h
--- r=j/q.c+(h.z%100)/100
--- u,v=rot(h.u,h.v,r+(q.z/100))
--- m,n=h.x+u*(h.o),h.y+v*(h.o)
--- return true,m,n,u*q.s,v*q.s end
 
 -- ============================
 -- level
@@ -519,31 +491,31 @@ function level()
   --ship speed
   elseif t==7 then
    if boss then
-    bo.s=0.25
+    bos=0.25
    elseif not apply(t) then
     less=0.75
     if(lel==7)less=0.85
    end
   elseif t==8 then
    if boss then
-    bo.s=0.5
+    bos=0.5
    elseif not apply(t) then
     less=1
     if(lel==8)less=1.5
    end
   elseif t==9 then
    if boss then
-    bo.s=1.5
+    bos=1.5
    elseif not apply(t) then
     less=2
     if(lel==9)less=2.5
    end
   --boss hp
   elseif t==79 then
-   bo.m+=100
-   bo.b+=100
-   bo.i+=2
-   bo.a=true
+   bom+=100
+   bob+=100
+   boi+=2
+   boa=true
   --developer markers
   elseif t==24 then
    for ii=1,1000 do
@@ -659,7 +631,7 @@ function level()
   elseif (t>=128 and t<=131)
   or (t>=144 and t<=147) then
    spawn(lex,ley,leu,lev,
-   lesf,less,5,lesm,
+   lesf,less,lesm,
    leb,ler)
   --count,delay,repeat x10
   elseif t>=96 and t<=105 then
@@ -907,21 +879,21 @@ f,w)
 -- m= movement function
 -- b= hp
 -- r= base score when destroyed
-function spawn(x,y,u,v,f,s,o,m,
+function spawn(x,y,u,v,f,s,m,
 b,r)
  h=hs[hs.g] next(hs,0)
- h.x,h.y,h.u,h.v,h.f,h.s,h.o,
+ h.x,h.y,h.u,h.v,h.f,h.s,
  h.m,h.a,h.b,h.d,h.e,h.c,h.z,
  h.r,h.t
- =x,y,u,v,f,s,o,m,true,
+ =x,y,u,v,f,s,m,true,
  flr(b*(cohb/1000)),0,b,0,0,r,0
  return h end
 
 function damage(h,v,qs,ve,ui)
  if boss then
-  if bo.b>0 then
-   bo.b-=v
-  elseif bo.a then
+  if bob>0 then
+   bob-=v
+  elseif boa then
    -- fixme lerk can be nil
    -- search for the next mark
    -- fixme avoid to overflow
@@ -934,7 +906,7 @@ function damage(h,v,qs,ve,ui)
    end
    lea=lerk
    lerk,lema=0,0
-   bo.m,bo.a,bo.i=0,false,4
+   bom,boa,boi=0,false,4
    for i=1,6 do
     local b=bo[i]
     if(b.q>0)qs[b.q].t=0
@@ -1108,8 +1080,8 @@ function reset(lvl)
  -- m=max hp
  -- d=disp hp
  -- i=hp heal speed
- box,boy,bou,bov,bo.s,bo.h,
- bo.b,bo.d,bo.m,bo.a,bo.i
+ box,boy,bou,bov,bos,boh,
+ bob,bod,bom,boa,boi
  =0,-50,0,30,0.5,1,
  0,0,0,false,4
  -- x,y=pos from boss
@@ -1120,8 +1092,8 @@ function reset(lvl)
  for i=1,6 do
   local b={}
   bo[i]=b
-  b.a,b.u,b.v,b.o,b.c,b.q
-  =true,0,1,10,0,0
+  b.a,b.u,b.v,b.c,b.q
+  =true,0,1,0,0
  end
  -- todo: change dir of canon: u,v
  bo[1].x,bo[1].y=-20,boy-5
@@ -1167,12 +1139,6 @@ end
 function present()
  local s,c,d,x,y,z,w,m,n
  =-55,{},{},70,283,0,1
- --c.x,c.y,c.u,c.v,c.o,c.c
- --=14,26,0,1,7,0
- --d.x,d.y,d.u,d.v,d.o,d.c
- --=-6,101,0,1,4,0
- --fire(d,3,3,20000,arc(.5,.05),roundinf,.4,4,false)
- --fire(c,8,2,30000,arc(.5,.03),roundinf,1,1,false)
  return cocreate(function()
   while true do
    if z%2==0 then
@@ -1406,23 +1372,23 @@ function upd()
  -- update,draw boss
  if boss then
   -- hp
-  d=bo.b-bo.d
+  d=bob-bod
   if d>4 then
-   bo.d+=bo.i
+   bod+=boi
   elseif d<-2 then
-   bo.d-=2
+   bod-=2
   else
-   bo.d=bo.b
+   bod=bob
   end
   rectfill(-58,18,58,20,2)
-  if bo.d>0 then
-   rectfill(-58,18,bo.d/bo.m*116-58,20,14)
+  if bod>0 then
+   rectfill(-58,18,bod/bom*116-58,20,14)
   end
   -- compute direction using target
   bd=dis(box,boy,bou,bov)
   if bd<-1 or bd>1 then
    bu,bv=nor(aim(box,boy,bou,bov))
-   bu,bv=bu*bo.s,bv*bo.s
+   bu,bv=bu*bos,bv*bos
    box+=bu
    boy+=bv
    for i=1,6 do
@@ -1625,10 +1591,10 @@ function _init()
  -- ship warmup
  for i=1,hs.l do
   h={} hs[i]=h
-  h.x,h.y,h.u,h.v,h.f,h.s,h.o,
+  h.x,h.y,h.u,h.v,h.f,h.s,
   h.m,h.a,h.b,h.d,h.e,h.c,h.z,
   h.r,h.q,h.t
-  =-128,0,0,0,0,0,0,none,false,
+  =-128,0,0,0,0,0,none,false,
   0,0,0,0,0,0,0,0
  end
  -- local damage warmup
