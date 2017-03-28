@@ -189,7 +189,6 @@ fp.g,fp.l=21,32
 coss=1000 -- shape speed multiplyer
 cosc=1000 -- shape count multiplyer
 cohb=1000 -- ship hp multiplyer
-ui={} -- ui
 scog={} -- digit for score
 scos={} -- score per digits
 hitg={} -- digit for hit
@@ -889,7 +888,7 @@ b,r)
  flr(b*(cohb/1000)),0,b,0,0,r,0
  return h end
 
-function damage(h,v,qs,ve,ui)
+function damage(h,v,qs,ve)
  if boss then
   if bob>0 then
    bob-=v
@@ -1467,7 +1466,7 @@ function upd()
      if(not s2)sfx(2) s2=true
      effect(b.x+8,b.y+16,beam)
      b.y=-128
-     damage(bo,1,qs,ve,ui)
+     damage(bo,1,qs,ve)
     end
    else
     -- collision with ship
@@ -1479,7 +1478,7 @@ function upd()
        if(not s2)sfx(2) s2=true
        effect(b.x+8,b.y+16,beam)
        b.y=-128
-       damage(h,1,qs,ve,ui)
+       damage(h,1,qs,ve)
       end
      end
     end
@@ -1530,7 +1529,7 @@ function upd()
   la=max(16,la-1)
   if hh then
    sfx(7)
-   damage(hh,ld,qs,ve,ui)
+   damage(hh,ld,qs,ve)
   end
   local lh=(lez%2==0)
   sspr(48,21,16,3,x-la/2,t+16,la,y-t-24,lh,false)
@@ -1557,7 +1556,7 @@ function upd()
     if h.a
     and dis(l.x,l.y,h.x,h.y)<l.s
     then
-     damage(h,2,qs,ve,ui)
+     damage(h,2,qs,ve)
     end
    end
   end
