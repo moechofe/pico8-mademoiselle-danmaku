@@ -721,6 +721,18 @@ function dart(i,p)
  end
 end
 
+function stars(i,p)
+ p.x+=6
+ p.y+=12
+ if p.y<280 then
+  line(p.x,p.y,p.x+3,p.y+7,5)
+  line(p.x+4,p.y+8,p.x+6,p.y+13,6)
+  line(p.x+7,p.y+14,p.x+7,p.y+15,7)
+ else 
+  p.f=none
+end
+end
+
 function point(c)
  c=max(1,c/100)
  return function(i,p)
@@ -1163,6 +1175,10 @@ function present()
  --fire(c,8,2,30000,arc(.5,.03),roundinf,1,1,false)
  return cocreate(function()
   while true do
+   if z%2==0 then
+    effect(rnd()*-128+20,-20
+    ,stars)
+   end
    if(y>43 and s>-10)y-=(y-43)/8
    camera(rnd(2)-1,rnd(3)-1)
    x+=w/4
@@ -1236,11 +1252,7 @@ function title()
   anim=present()
  end
  cls()
- --pat(true)
- --titlerotpal(0.2)
- --bul()
- --pal()
- --art(15,40)
+ pat(true)
  if anim and costatus(anim) then
   coresume(anim)
  end
