@@ -4,17 +4,6 @@ __lua__
 -- mademoiselle danmaku 0.23
 -- martin mauchauffee
 
--- todo: mutualize _init & reset
-
--- todo: simplify arrive func
-
--- tooo: skip anim when �
-
--- todo: make one eye boss
-
--- todo: remove the score
--- cached digits sprites?
-
 -- todo: store score
 
 -- todo: hit decrease when kill
@@ -1215,11 +1204,15 @@ function present()
      anim,lvl,scene=false,1,play
      reset()
      music(-1)
+     --for i=1,qs.l do
+     -- qs[i].t=0
+     --end
      for i=1,pp.l do
       pp[i].f=none
      end
     end
    end
+
    yield()
   end
 	end)
@@ -1632,12 +1625,13 @@ end
 scene=title
 music(1)
 
+cartdata("moechofe_md_1")
+printh("==========fresh start")
+menuitem(1,"mark here",mhere)
+menuitem(2,"mark behind",mhind)
+menuitem(3,"reset mark",mrese)
+
 function _init()
- cartdata("moechofe_md_1")
- printh("==========fresh start")
- menuitem(1,"mark here",mhere)
- menuitem(2,"mark behind",mhind)
- menuitem(3,"reset mark",mrese)
  -- bullet warpup
  for i=1,bs.l do
   b={} bs[i]=b
@@ -1678,7 +1672,7 @@ function _init()
   =0,0,0,none
  end
  -- sprite particle warmup
- for i=1,32 do
+ for i=1,sp.l do
   s,b,f,l={},{},{},{}
   sp[i],bp[i],fp[i]
   =s,b,f
@@ -1692,21 +1686,18 @@ function _init()
  end
  -- score
  for i=1,8 do scos[i]=0 end
- if false then lea=dget(63) end
+ if true then lea=dget(63) end
 end
 
 slow=-1
 function _draw()
- camera(-64,0)
- if slow==0 then
-  cls()scene()
-  if(anim and costatus(anim))coresume(anim)
-  slow+=1
- elseif slow==1 then
- 	slow=0
+ camera(-64,0) 
+ if slow==1 then
+  slow=0
  else
   cls()scene()
   if(anim and costatus(anim))coresume(anim)
+  if(slow==0)slow=1
  end
  if false then -- debug
   print("m"..flr(stat(0)).." c"..flr(stat(1)*1000)/1000,18,1,7)
@@ -1793,10 +1784,10 @@ e0022002000200200e000200ee4220020e000002eee42002e004200200200020e0042002eee42002
 00ffeeef0822e2248208ee8102824f7f000388800005d5000000000000005d550000bbbbbbbbbbbbbbbbb56d551288880000000bbb300000000000d6666e8888
 00fefffe00882229880e88132882471f0000b33882005dd50000000000005dd5000bbbbbbbbbbbbbbbb335dd551888880000000bb33000000000006d66688888
 000ffeef000082448805881b288824ff00003bb3388205d655000000000053bb000bbbbbbbbbbbbbb33305d5518888880000000bb300000000000006d6678888
-4002fff2000822990e25888128820d4400000b3bb338825dd65550000002311600bbbbbbbbbbbbbb33000055518882220000000bb30000000000000666768888
-f0221112008222440885288228800560000000bb3b3388255ddd55122882311600bbbbbb3bbbbbb33000000000822eee0000000b330000000000000066767888
-f2222772082e72290885587202800050000000b3b3b33882555555128888b77600bbbbb30bbbbb3300000000022ee8880000000b300000000000000067667888
-ff4227120827128a6d885712028200000000000b3bb33388211111128888bb6600bbbb300bbbbb30000000dddee888880000000b300000000000000007677788
+4002fff2000822990e25888128820d4400000b3bb338825dd65550000002366600bbbbbbbbbbbbbb33000055518882220000000bb30000000000000666768888
+f0221112008222440885288228800560000000bb3b3388255ddd55122882367700bbbbbb3bbbbbb33000000000822eee0000000b330000000000000066767888
+f2222772082e72290885587202800050000000b3b3b33882555555128888b67100bbbbb30bbbbb3300000000022ee8880000000b300000000000000067667888
+ff4227120827128a6d885712028200000000000b3bb33388211111128888bb7100bbbb300bbbbb30000000dddee888880000000b300000000000000007677788
 4ff4222188222809d0085522002800000000000bbb3b333882555551288223bb000bb3300bbbb3300000ddddd88888880000000b300000000000000000677778
 4fff40228e822800006d5002002d000000000000bbbb333356ddd55128221553000bb300bbbbb3000000ddddd888888800000000300000000000000000077770
 44f0f0008e88800000d500000005600000000000bbb3b3356dd5551288215512000b3300bbbb33000000ddddd888888800000000000000000000000000000770
