@@ -10,8 +10,6 @@ __lua__
 
 -- tooo: skip anim when �
 
--- todo: mutualize anim coresume
-
 -- todo: make one eye boss
 
 -- todo: remove the score
@@ -167,8 +165,8 @@ bs={} -- bullets
 bs.g,bs.l=1,512
 qs={} -- shapes
 qs.g,qs.l=1,16
-ps={} -- patterns
-ps.g,ps.l=1,8
+--ps={} -- patterns
+--ps.g,ps.l=1,8
 hs={} -- ships
 hs.g,hs.l=1,16
 be={} -- beam
@@ -1208,17 +1206,18 @@ function present()
    if(s>25)spr(232,42,30,1,2,true)
    if(s>39)rectfill(-49,44,15,50,1)rectfill(19,44,35,50,1)print("uncomprehensible zero",-48,45,13)
    if(s>44)rectfill(-49,50,-25,56,1)rectfill(-21,50,7,56,1)print("bomber fighter",-48,51,13)
-   --rectfill(-12,99,12,105,1)
-   --print("\151play",-11,100,7)
-   if(s<75)s=s+1
-   if s>30 and btnp(5) then
-    anim=false
-    lvl=1
-    reset()
-    scene=play
-    music(-1)
-    for i=1,qs.l do
-     qs[i].t=0
+   if(s<45)s=s+1
+
+   if btnp(5) then
+    if s<45 then
+     s,y=45,43
+    else
+     anim,lvl,scene=false,1,play
+     reset()
+     music(-1)
+     for i=1,pp.l do
+      pp[i].f=none
+     end
     end
    end
    yield()
@@ -1231,23 +1230,30 @@ function ranking()
  return cocreate(function()
   while true do
    camera(-40,h)
-   --s+=1
-	  spr(33,0,0)
-	  spr(34,7,0)
-	  spr(35,14,0)
-	  spr(49,21,0)
-	  spr(50,27,0)
-	  spr(35,33,0)
-	  spr(51,40,0)
-	  print("last",-4,24,13)
-	  score(scos,-12,30)
-	  print("high",-4,44,13)
-	  for i=0,6 do
+	 spr(33,0,0)
+	 spr(34,7,0)
+	 spr(35,14,0)
+	 spr(49,21,0)
+	 spr(50,27,0)
+	 spr(35,33,0)
+	 spr(51,40,0)
+	 print("last",-4,24,13)
+	 score(scos,-12,30)
+	 print("high",-4,44,13)
+	 for i=0,6 do
  	  score(slottoscore(i),-12,
  	  50+i*9)
  	 end
- 	 if h<-8 then h+=(-h+8)/5 end
-	  yield()
+   if btnp(5) then
+    if h<-8 then
+     h=-8
+    else
+     anim=false
+     scene=title
+    end
+   end
+ 	 if(h<-8)h+=(-h+8)/100
+	 yield()
 	 end
  end)
 end
@@ -1259,21 +1265,13 @@ function play()
  elseif not anim then
   anim=arrive(10)
  end
- if anim and costatus(anim) then
-  coresume(anim)
- end
  upd()
  -- update level,spawn ship
  level() lez+=1
 end
 
 function leader()
- if not anim then
-  anim=ranking()
- end
- if anim and costatus(anim) then
-  coresume(anim)
- end
+ if(not anim)anim=ranking()
 end
 
 titlerotpal=palrot({1,2,14},{1,2,14,15,13,12})
@@ -1284,9 +1282,6 @@ function title()
  end
  --cls()
  pat(true)
- if anim and costatus(anim) then
-  coresume(anim)
- end
 end
 
 function ctr()
@@ -1633,8 +1628,8 @@ function upd()
  end
 end
 
-scene=leader
---scene=title
+--scene=leader
+scene=title
 music(1)
 
 function _init()
@@ -1705,11 +1700,13 @@ function _draw()
  camera(-64,0)
  if slow==0 then
   cls()scene()
+  if(anim and costatus(anim))coresume(anim)
   slow+=1
  elseif slow==1 then
  	slow=0
  else
   cls()scene()
+  if(anim and costatus(anim))coresume(anim)
  end
  if false then -- debug
   print("m"..flr(stat(0)).." c"..flr(stat(1)*1000)/1000,18,1,7)
