@@ -381,68 +381,32 @@ function level()
    end
   --position and direction
   elseif t==40 then
-   if boss then
-    bou,bov=0,30
-   else
-    lex,ley=0,-18
-    leu,lev=0,1
-   end
+   bou,bov,lex,ley,leu,lev
+   =0,30,0,-18,0,1
   elseif t==41 then
-   if boss then
-    bou,bov=-25,30
-   else
-    lex,ley=-40,-18
-    leu,lev=0,1
-   end
+   bou,bov,lex,ley,leu,lev
+   =-25,30,-40,-18,0,1
   elseif t==42 then
-   if boss then
-    bou,bov=25,30
-   else
-    lex,ley=40,-18
-    leu,lev=0,1
-   end
+   bou,bov,lex,ley,leu,lev
+   =25,30,40,-18,0,1
   elseif t==43 then
-   if boss then
-    bou,bov=20,44
-   else
-    lex,ley=-70,-18
-    leu,lev=0.7,0.7
-   end
+   bou,bov,lex,ley,leu,lev
+   =20,44,-70,-18,0.7,0.7
   elseif t==44 then
-   if boss then
-    bou,bov=-20,44
-   else
-    lex,ley=80,-18
-    leu,lev=-0.7,0.7
-   end
+   bou,bov,lex,ley,leu,lev
+   =-20,44,80,-18,-0.7,0.7
   elseif t==56 then
-   if boss then
-    bou,bov=30,34
-   else
-    lex,ley=-82,40
-    leu,lev=1.0,0
-   end
+   bou,bov,lex,ley,leu,lev
+   =30,34,-82,40,1.0,0
   elseif t==57 then
-   if boss then
-    bou,bov=-30,34
-   else
-    lex,ley=82,40
-    leu,lev=-1.0,0
-   end
+   bou,bov,lex,ley,leu,lev
+   =-30,34,82,40,-1.0,0
   elseif t==58 then
-   if boss then
-    bou,bov=30,24
-   else
-    lex,ley=-82,20
-    leu,lev=1.0,0
-   end
+   bou,bov,lex,ley,leu,lev
+   =30,24,-82,20,1.0,0
   elseif t==59 then
-   if boss then
-    bou,bov=-30,24
-   else
-    lex,ley=82,20
-    leu,lev=-1.0,0
-   end
+   bou,bov,lex,ley,leu,lev
+   =-30,24,82,20,-1.0,0
   --ship movement
   elseif t==47 then
    if(not apply(t))lesm=cross
