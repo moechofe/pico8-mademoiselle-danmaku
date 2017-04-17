@@ -430,22 +430,19 @@ function level()
    if boss then
     bos=0.25
    elseif not apply(t) then
-    less=0.75
-    if(lel==7)less=0.85
+    less=lel==7 and 0.85 or 0.75
    end
   elseif t==8 then
    if boss then
     bos=0.5
    elseif not apply(t) then
-    less=1
-    if(lel==8)less=1.5
+    less=lel==8 and 1.5 or 1
    end
   elseif t==9 then
    if boss then
     bos=1.5
    elseif not apply(t) then
-    less=2
-    if(lel==9)less=2.5
+    less=lel==9 and 2.5 or 2
    end
   --boss hp
   elseif t==79 then
@@ -492,9 +489,8 @@ function level()
    leb,ler,lesf=90,10000,128
   --boss arrive! distance from canon
   elseif t==127 then
-   boss,wa=true,1
-   box,boy=0,-50
-   bou,bov=0,30
+   boss,wa,box,boy,bou,bov
+   =true,1,0,-50,0,30
   --arc angle
   elseif t==28 then
    leaa=0.5
@@ -545,12 +541,10 @@ function level()
   end
   --arc
   if t>=28 and t<=31 then
-   lebn=arc
-   leas=0
+   lebn,leas=arc,0
   --cancel selection
   elseif t==0 then
-   lem=false
-   leh={}
+   lem,leh=false,{}
   --multiple selection
   elseif t==63 then
    lem=true
