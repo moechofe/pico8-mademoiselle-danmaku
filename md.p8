@@ -1395,9 +1395,9 @@ function upd()
   else
    bod=bob
   end
-  rectfill(-58,18,58,20,2)
+  rectfill(-54,11,54,13,2)
   if bod>0 then
-   rectfill(-58,18,bod/bom*116-58,20,14)
+   rectfill(-54,11,bod/bom*116-54,13,8)
   end
   -- compute direction using target
   bd=dis(box,boy,bou,bov)
@@ -1644,7 +1644,7 @@ function _init()
  end
  -- score
  for i=1,8 do scos[i]=0 end
- if true then lea=dget(63) end
+ if true then reset(1) scene=play music(-1) lea=dget(63) end
 end
 
 slow=-1
@@ -1657,10 +1657,10 @@ function _draw()
   if(anim and costatus(anim))coresume(anim)
   if(slow==0)slow=1
  end
- if false then -- debug
-  print("m"..flr(stat(0)).." c"..flr(stat(1)*1000)/1000,18,1,7)
-  print("z"..lez..">"..flr(lea),18,7,9)
-  print(err,-57,122,8)
+ print(err,-57,122,8)
+ if true then -- debug
+  print("m"..flr(stat(0)).." c"..flr(stat(1)*1000)/1000,-57,115,7)
+  print("z"..lez..">"..flr(lea),0,115,9)
   x,y=lea%128,flr(lea/128)
   map(x-8,y,-68,17,32,1)
   spr(95,-7,14)
