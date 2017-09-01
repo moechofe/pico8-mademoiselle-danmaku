@@ -1115,15 +1115,11 @@ function arrive(wait)
  end)
 end
 
-function present()
- local s,c,d,x,y,z,w,m,n
- =-55,{},{},70,283,0,1
+function present(st)
+ local s,c,d,x,y,z,w,m,n,t
+ =-st,{},{},70,283,0,1,0,0,0
  return cocreate(function()
   while true do
-   if z%2==0 then
-    effect(rnd()*-128+20,-20
-    ,stars)
-   end
    if(y>43 and s>-10)y-=(y-43)/8
    camera(rnd(2)-1,rnd(3)-1)
    x+=w/4
@@ -1160,12 +1156,14 @@ function present()
    if(s>39)rectfill(-49,44,15,50,1)rectfill(19,44,35,50,1)print("uncomprehensible zero",-48,45,13)
    if(s>44)rectfill(-49,50,-25,56,1)rectfill(-21,50,7,56,1)print("bomber fighter",-48,51,13)
    if(s<45)s=s+1
-
-   if btnp(5) then
+   if t==160 then
+    anim=ranking()
+   elseif btnp(5) then
     if s<45 then
      s,y=45,43
     else
-     anim,lvl,scene=false,1,play
+     anim,lvl,scene
+     =false,1,play
      reset()
      music(-1)
      --for i=1,qs.l do
@@ -1176,15 +1174,14 @@ function present()
      end
     end
    end
-
+   t=t+1
    yield()
   end
 	end)
 end
 
 function ranking()
- h=-130
- z=0
+ local h,z=-130,0
  return cocreate(function()
   while true do
    z+=1
@@ -1207,16 +1204,14 @@ function ranking()
     if h<-8 then
      h=-8
     else
-     anim=false
-     scene=title
+     anim=present(5)
     end
    end
  	 if z>100 then
  	  if h<110 then
  	   h+=z/6
  	  else
- 	   anim=false
- 	   scene=title
+ 	   anim=present(5)
  	  end
  	 else
   	 if(h<-8)h+=(-h+8)/6
@@ -1238,15 +1233,15 @@ function play()
  level() lez+=1
 end
 
-function leader()
- if(not anim)anim=ranking()
-end
-
 titlerotpal=palrot({1,2,14},{1,2,14,15,13,12})
 
+tz=0
 function title()
- if not anim then
-  anim=present()
+ if(not anim)anim=present(55)
+ tz=tz%2+1
+ if tz==1 then
+  effect(rnd()*-128+20,-20
+  ,stars)
  end
  pat(true)
 end
@@ -1597,9 +1592,9 @@ function upd()
  end
 end
 
-scene=leader
---scene=title
-music(1)
+--scene=leader
+scene=title
+--music(1)
 
 cartdata("moechofe_md_1")
 printh("==========fresh start")
