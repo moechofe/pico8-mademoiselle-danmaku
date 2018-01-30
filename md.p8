@@ -1001,70 +1001,67 @@ end
 --end
 
 function reset(l)
- la=16
- vex,vey,veu,vev,vea,veb,
- vez,ved,vel,ves,vep,vew,
- veg
- =0,140,0,0,false,false,0,false,
- false,3,10,40,false
- lp={}--late postion of vessels
- lp.i=1
- lpa=false--late position active
- lpf=false--fix late position
- for i=1,4 do lp[i]={x=0,y=0} end
- -- z=level frame counter
- -- a=index of the tile to read
- lez,lea,boss,lema,lerk,boti
- =0,0,false,0,0,132 -- 1
- --=0,384,false,0,0,132 -- 1 boss
- --=0,768,false,0,0,164 -- 2
- -- x,y=ship position
- -- u,v=ship direction
- -- sm=ship movement
- -- ss=ship speed
- -- sf=ship frame
- -- b=base hp
- -- r=base scare
- -- h=selected ship for shoot settings
- -- m=multi selection enable
- -- p=consumed, h will be reset
- -- c=bullet count
- -- d=bullet delay
- -- t=bullet repeat
- -- bn=shape
- -- aa=arc angle
- -- as=arc spirale
- -- bm=bullet movement
- -- bs=bullet speed
- -- bz=bullet speed multiplyer
- -- w=aim
- -- bf=bullet frame
- -- bt=bullet number state 1=count 2=delay 3=repeat
- -- l=old tile
- lex,ley,leu,lev,lesm,
- less,leb,ler,leh,
- lec,led,let,lebn,leaa,
- leas,lebm,lebs,lebz,lew,
- lesf,lebf,lebt,lem,lel
- =0,-82,0,1,cross,1,5,0,{},
+ -- lp=late postion of vessels,
+ -- late position active
+ -- fix late position
+ -- lez=level frame counter
+ -- lea=index of tile to read
+ --=0,384,false,0,0,132 --1 boss
+ --=0,768,false,0,0,164 --2
+ -- lex,ley=ship position
+ -- leu,lev=ship direction
+ -- lesm=ship movement
+ -- less=ship speed
+ -- lesf=ship frame
+ -- leb=base hp
+ -- ler=base scare
+ -- leh=selected ship for shoot
+ -- settings
+ -- lem=multi selection enable
+ -- lep=consumed, will be reset
+ -- lec=bullet count
+ -- led=bullet delay
+ -- let=bullet repeat
+ -- lebn=shape
+ -- leaa=arc angle
+ -- leas=arc spirale
+ -- lebm=bullet movement
+ -- lebs=bullet speed
+ -- lebz=bullet speed multiplyer
+ -- lew=aim
+ -- lebf=bullet frame
+ -- lebt=bullet number state 
+ -- 1=count 2=delay 3=repeat
+ -- lel=old tile
+ -- box,boy=position
+ -- bou,bov=target position
+ -- bos=speed
+ -- boh=sel canon
+ -- bob=real hp
+ -- bom=max hp
+ -- bod=disp hp
+ -- boi=hp heal speed
+ la,vex,vey,veu,vev,vea,veb,vez,
+ ved,vel,ves,vep,vew,veg,lp,lpa,
+ lpf,lez,lea,boss,lema,lerk,
+ boti,lex,ley,leu,lev,lesm,less,
+ leb,ler,leh,lec,led,let,lebn,
+ leaa,leas,lebm,lebs,lebz,lew,
+ lesf,lebf,lebt,lem,lel,uipo,
+ hitd,hitv,box,boy,bou,bov,bos,
+ boh,bob,bod,bom,boa,boi
+ =16,0,140,0,0,false,false,0,
+ false,false,3,10,40,false,{},
+ false,false,0,0,false,0,0,132,
+ 0,-82,0,1,cross,1,5,0,{},
  1,0,1,arc,0,0,none,0,1,false,
- 0,0,1,false,0
+ 0,0,1,false,0,20,0,0,
+ 0,-50,0,30,0.5,1,0,0,0,false,4
+ lp.i=1
+ for i=1,4 do lp[i]={x=0,y=0} end
  -- ui
  for i=1,8 do scos[i]=0 end
  for i=1,3 do hitg[i]=0 end
- uipo,hitd,hitv=20,0,0
- -- x,y=position
- -- u,v=target position
- -- s=speed
- -- h=sel canon
- -- b=real hp
- -- m=max hp
- -- d=disp hp
- -- i=hp heal speed
- box,boy,bou,bov,bos,boh,
- bob,bod,bom,boa,boi
- =0,-50,0,30,0.5,1,
- 0,0,0,false,4
  -- x,y=pos from boss
  -- a=active (needed)
  -- u,v=canon dir
@@ -1202,16 +1199,16 @@ function ranking()
   while true do
    z+=1
    camera(-40,h)
-			sprtext("33,34,35,49,50,35,51,",0,0)
+	 sprtext("33,34,35,49,50,35,51,",0,0)
  	 print("last",-4,14,13)
  	 score(scos,-12,20)
  	 print("high",-4,30,13)
  	 score(best,-12,36)
-			sprtext("28,33,29,30,50,31,46,",0,50)
-			print("title screen art",-6,63,13)
-			print("radigo",12,70,6)
-			print("every things else",-8,83,13)
-			print("moechofe",10,90,6)
+	 sprtext("28,33,29,30,50,31,46,",0,50)
+	 print("title screen art",-6,63,13)
+	 print("radigo",12,70,6)
+	 print("every things else",-8,83,13)
+	 print("moechofe",10,90,6)
    if btnp(5) then
     if h<-8 then
      h=-8
