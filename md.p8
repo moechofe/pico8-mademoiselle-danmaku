@@ -160,40 +160,33 @@ function dis(x,y,u,v)
 
 -- !d= show vessel colision
 
-bs={} -- bullets
-bs.g,bs.l=1,512
-qs={} -- shapes
-qs.g,qs.l=1,16
---ps={} -- patterns
---ps.g,ps.l=1,8
-hs={} -- ships
-hs.g,hs.l=1,16
-be={} -- beam
-be.g,be.l=1,16
-be.d,be.e,be.f=0,2,0
-pp={} -- particles
-pp.g,pp.l=1,8
-sp={} -- sprite particles
-sp.g,sp.l=1,32
-bp={} -- back circle particle
-bp.g,bp.l=11,32
-fp={} -- front circle particl
-fp.g,fp.l=21,32
--- shape speed multiplyer
--- shape count multiplyer
--- ship hp multiplyer
-coss,cosc,cohb
-=1000,1000,1000 
--- score and best per digits
-scos,best={},{}
-hitg={} -- digit for hit
-hitv=0 -- hit counter
-lo={} -- local damage
-lo.g=1
-lo.l=16
-bo={} -- boss cannon
-err="" -- message
-wa=0 -- warning message
+-- bullets,shapes,ships,beam,
+-- particles,sprite particles,
+-- back circle particle,
+-- front circle particle,
+-- score digits,best score
+-- digits,hit combo digits,
+-- local damage,boss cannons
+bs,qs,hs,be,pp,sp,bp,fp,scos,
+best,hitg,lo,bo
+={},{},{},{},{},{},{},{},{},{},
+{},{},{}
+
+-- some table current index and
+-- maximum size...,
+-- shape speed multiplyer,
+-- shape count multiplyer,
+-- ship hp multiplyer,
+-- hit counter,message,
+-- warning message
+bs.g,bs.l,qs.g,qs.l,hs.g,hs.l,
+be.g,be.l,bed,bee,bef,pp.g,pp.l,
+sp.g,sp.l,bp.g,bp.l,fp.g,fp.l,
+coss,cosc,cohb,hitv,lo.g,lo.l,
+err,wa
+=1,512,1,16,1,16,1,16,0,2,0,1,8,
+1,32,11,32,21,32,1000,1000,1000,
+0,1,16,"",0
 
 function next(t,a)
  t.g=(t.g+a)%t.l+1
@@ -1283,7 +1276,7 @@ function ctr()
   if(not veb)veb,ves=true,3 sfx(0,0)
  else
   if veb then
-   veb,be.d=false,0
+   veb,bed=false,0
    if(not vel)sfx(-2,0) ves=3
   end
  end
@@ -1489,18 +1482,18 @@ function upd()
  pal()
  -- update beam
  if veb then
-  if be.d==0 then
-   be.d=be.e
+  if bed==0 then
+   bed=bee
    for j=0,1 do
     b=be[be.g]
     be.g=(be.g==be.l)and 1or be.g+1
     b.x=vex-8*j
     b.y=vey-24
    end
-  else be.d-=1 end
-  spr(16+be.f,vex-11,vey-16)
-  spr(16+(be.f+2)%4,vex+3,vey-16,1,1,true)
-  be.f=(be.f+1)%4
+  else bed-=1 end
+  spr(16+bef,vex-11,vey-16)
+  spr(16+(bef+2)%4,vex+3,vey-16,1,1,true)
+  bef=(bef+1)%4
  end
  -- draw beam
  s2=false
