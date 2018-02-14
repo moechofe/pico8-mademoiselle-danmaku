@@ -172,9 +172,9 @@ function dis(x,y,u,v)
 -- digits,hit combo digits,
 -- local damage,boss cannons
 bs,qs,hs,be,pp,sp,bp,fp,scos,
-best,hitg,lo,bo
+best,hitg,lo,bo,slow
 ={},{},{},{},{},{},{},{},{},{},
-{},{},{}
+{},{},{},-1
 
 -- some table current index and
 -- maximum size...,
@@ -187,10 +187,10 @@ bs.g,bs.l,qs.g,qs.l,hs.g,hs.l,
 be.g,be.l,bed,bee,bef,pp.g,pp.l,
 sp.g,sp.l,bp.g,bp.l,fp.g,fp.l,
 coss,cosc,cohb,hitv,lo.g,lo.l,
-err,wa
+err
 =1,512,1,16,1,16,1,16,0,2,0,1,8,
 1,32,11,32,21,32,1000,1000,1000,
-0,1,16,"",0
+0,1,16,""
 
 function next(t,a)
  t.g=(t.g+a)%t.l+1 end
@@ -209,10 +209,9 @@ function bcount(c)
 -- bullet movements
 
 function roundexpl(r,m)
-local z=lez
-local a
+local z,a=lez
 return function(i,b)
- err="z:"..(lez-z)
+ --err="z:"..(lez-z)
  local a=lez-z
  if a<m then
   b.u,b.v=rot(b.u,b.v,r)
@@ -350,14 +349,14 @@ function apply(t)
  return true
 end
 
-function findt()
- for i=1,100 do
-  local x,y=(lea+i)%128,(lea+i)/128
-  if mget(x,y)==78 then
-   return flr(lea+i)
-  end
- end
-end
+--function findt()
+-- for i=1,100 do
+--  local x,y=(lea+i)%128,(lea+i)/128
+--  if mget(x,y)==78 then
+--   return flr(lea+i)
+--  end
+-- end
+--end
 
 function level()
  lea+=0.25
@@ -365,10 +364,11 @@ function level()
   x,y=lea%128,lea/128
   t=mget(x,y)
 	 if t==111 then
-   anim=false
-	  reset()
-	  scene=title
-	  music(1)
+	  scene=upd
+   anim=win()
+	  --reset()
+	  --scene=title
+	  --music(1)
 	  --reset()
 	  --for i=1,bs.l do
 	   --bs[i].m=none
@@ -464,7 +464,9 @@ function level()
     end
    end
   elseif t==26 then
-
+   slow=1
+  elseif t==27 then
+   slow=-1
   --markers
   elseif t==78 then
    if lema==0 then
@@ -512,12 +514,12 @@ function level()
   --bullet movement
   elseif t==34 then
    lebm=none
-  elseif t==35 then
-   err="t==35"
-  elseif t==50 then
-   err="t==50"
+  --elseif t==35 then
+  -- err="t==35"
+  --elseif t==50 then
+  -- err="t==50"
   elseif t==16 then
-   lebm=roundexpl(0.02,120)
+   lebm=roundexpl(0.02,110)
   elseif t==51 then
    lpa=true
   elseif t==90 then
@@ -997,7 +999,7 @@ end
 -- end
 --end
 
-function reset(l)
+function reset()
  -- lp=late postion of vessels,
  -- late position active
  -- fix late position
@@ -1040,7 +1042,7 @@ function reset(l)
  -- boi=hp heal speed
  la,vex,vey,veu,vev,vea,veb,vez,
  ved,vel,ves,vep,vew,veg,lp,lpa,
- lpf,lez,lea,boss,lema,lerk,
+ lpf,lez,boss,lema,lerk,
  boti,lex,ley,leu,lev,lesm,less,
  leb,ler,leh,lec,led,let,lebn,
  leaa,leas,lebm,lebs,lebz,lew,
@@ -1049,7 +1051,7 @@ function reset(l)
  boh,bob,bod,bom,boa,boi
  =16,0,140,0,0,false,false,0,
  false,false,3,10,40,false,{},
- false,false,0,0,false,0,0,132,
+ false,false,0,false,0,0,132,
  0,-82,0,1,cross,1,5,0,{},
  1,0,1,arc,0,0,none,0,1,false,
  0,0,1,false,0,20,0,0,
@@ -1108,25 +1110,48 @@ function arrive(wait)
    yield()
   end
   veg=false
-  anim=win(0,40)
+  anim=false
  end)
 end
 
-function win(x,y)
+function win()
  local t=0
+ warmup()
  return cocreate(function()
-  veg=true
+  veg,vea=true,true
   for t=0,70 do
    y+=0.5
    sfx(8)
    if t%11==0 then
     sfx(5)
-    effect(x+t-40+rnd(20),
-    y+(t*33)%30-15,explosion)
+    effect(box+t*0.5-25+rnd(10),
+    boy+(t*33)%20,explosion)
+   end
+   if t==50 then
+    effect(box,boy+15,die,0)
+    rectfill(-64,0,64,128,7)
+   end
+   if t==65 then
+    boss=false
    end
    yield()
   end
-  anim=false
+  for t=0,20 do
+   vev-=1
+   vey+=vev
+   rectfill(vex-2,vey+4,vex+1,
+   128,7-max(t-18,0))
+   sspr(64+(t%2)*24,16,24,16,
+   vex-8,vey+4,15,12)
+   yield()
+  end
+  for t=0,80 do
+   spr(5,-20,70-t*0.25,5,1)
+   yield()
+  end
+  anim,scene,lea
+  =false,play,768
+  reset()
  end)
 end
 
@@ -1177,13 +1202,10 @@ function present(st)
     if s<45 then
      s,y=45,43
     else
-     anim,lvl,scene
-     =false,1,play
+     anim,scene,lea
+     =false,play,0
      reset()
      music(-1)
-     --for i=1,qs.l do
-     -- qs[i].t=0
-     --end
      for i=1,pp.l do
       pp[i].f=none
      end
@@ -1357,6 +1379,7 @@ function bul()
   b.m(i,b)
   local d=dis(b.x-3,b.y-3,vex-4,vey-3)
   if vea and d>0 and not veg then
+   --debug
    if(d<6)dead()
    if(d<6)deadc+=1
    --todo reduce the distance
@@ -1416,11 +1439,11 @@ function upd()
   pal()
   local wa9=wa%9
   if(wa>40 and wa<43 or wa>114)pal(6,7)
-  if(wa>40 and wa<116)print("100% bullets storm",-56,72,6)
-  if(wa>50 and wa<53 or wa>112)pal(6,7)
-  if(wa>50 and wa<114)print("#"..flr(wa/9%9).."."..wa9..wa9..wa9.."\x8132767\x99"..(shl(1,wa)%9).."\x80mk2",-56,79,6)
-  if(wa>60 and wa<63 or wa>110)pal(6,7)
-  if(wa>60 and wa<112)print("he is tough!!!",-56,86,6)
+  --if(wa>40 and wa<116)print("100% bullets storm",-56,72,6)
+  --if(wa>50 and wa<53 or wa>112)pal(6,7)
+  --if(wa>50 and wa<114)print("#"..flr(wa/9%9).."."..wa9..wa9..wa9.."\x8132767\x99"..(shl(1,wa)%9).."\x80mk2",-56,79,6)
+  --if(wa>60 and wa<63 or wa>110)pal(6,7)
+  --if(wa>60 and wa<112)print("he is tough!!!",-56,86,6)
   pal()
   wa+=1
  end
@@ -1580,7 +1603,7 @@ function upd()
    if(la==16)la=25
    ld=1.7
    pal(7,0)pal(12,8)pal(6,2)
-   palt(0,false)
+   --palt(0,false)
   end
   la=max(16,la-1)
   if hh then
@@ -1630,7 +1653,7 @@ menuitem(1,"mark here",mhere)
 menuitem(2,"mark behind",mhind)
 menuitem(3,"reset mark",mrese)
 
-function _init()
+function warmup()
  -- bullet warpup
  for i=1,bs.l do
   b={} bs[i]=b
@@ -1645,6 +1668,10 @@ function _init()
   =0,0,0,-1,0,none,none,0.0,
   false,0,false
  end
+end
+
+function _init()
+ warmup()
  -- ship warmup
  for i=1,hs.l do
   h={} hs[i]=h
@@ -1686,7 +1713,7 @@ function _init()
 	 scos[i],best[i]=0,0
 	end
  --debug
- if true then
+ if false then
   reset()
   scene=play
   music(-1)
@@ -1694,7 +1721,6 @@ function _init()
  end
 end
 
-slow=-1
 function _draw()
  camera(-64,0) 
  if slow==1 then
@@ -1705,7 +1731,7 @@ function _draw()
   if(slow==0)slow=1
  end
  print(err,-57,122,8)
- if true and lez then -- debug
+ if false and lez then -- debug
   print("m"..flr(stat(0)).." c"..flr(stat(1)*1000)/1000,-57,115,7)
   print("z"..lez..">"..flr(lea),0,115,9)
   x,y=lea%128,flr(lea/128)
@@ -1984,8 +2010,8 @@ __map__
 2a072f801c213c3c73607362780a070100082f29820a062f717974311f022e090000000000000000000000000000002a08083e05821f71798272310b82020b020a02002b062f09801c3c3c3c76730a07070708627022047376740100000000000000000000000a092d0909000000000000000000006070607060702f00787774
 00290906821c31820b070607820b0706070a0706070c070505010b070505010a07050501000000002907062f911c3c21737362700a04002f092b05833906832b05833906832b05833906830000000000293e0909311f7178607200930a03930a03930a03930a0300000000000000000000000000000000000000000000000000
 006070607060707f00090000000000000000080000000000070008285e39004f4f384e1f607279617321390a010b0100003a0000001c6174703b60710f02000000384e093b4f4f4f5e073a4e211e5a60757369703f0a0b030000211c63727160720e010000000000000e01000e01000000003b000e01000e010000000000000e
-01000000000e01000e010000000000000e01000e010000000000000e01000e01000000384e19284f4f4f5e004e000000211d61747363773c3c0e01000000000000311f5a60717860733f0c0d03000000004e093b380039003a0039285e004f4f4f4f4e211c3d3d3d3d61717363760e040000213c1c6078736172100f01000000
-000000000000000000000000000000000000000000000000004e00000000006f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+01000000000e01000e010000000000000e01000e010000000000000e01000e01000000384e19284f4f4f5e004e000000211d61747363773c3c0e01000000000000311f5a60717860733f0c0d03000000004e093b380039003a0039285e004f4f4f4f4e211c3d1b3d3d3d61717363760e0400213c1c6078736172100f01000000
+0000000000000000000000000000000000000000000000001a4e00000000006f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000031336072607060712f0829b12ab10029b12ab13f0a0b0c0d07070a050b060c050d063f0a0b0c0d090902020a060b050c060d05002808b06171607460721c3d210a010460710a2d09050906637260731f31332f0938a10a062f023aa10a052f0238a10a062f023aa10a052f0238a10a062f023aa10a052f020000000000
 0000000000000000292fb2627260761c0a073c0a086278213c0400607162706072313300392f09b30a020000b30a020b05b30a020b05b30a020b05b30a020b050000003d3d607360736073093e2bb02cb02ba12ca12bb12cb11c3f0f0e0d0c0b0a08042d096171003f0d0c017974003f0b0a070200000000003a072fa20a0707
 0506001f3e310960716077607228b30a03b30a03b30a03b30a03b30a03b30a03b30a03b30a032ab30a03b30a03b30a03b30a03b30a03b30a03b30a0320b30a03b30a03b30a03b30a0329b30a03b30a03b30a03b30a03b30a03b30a03b30a03b30a03b30a03b30a03b30a032028b30a03b30a030c0505b30a03b30a030e0606b3
