@@ -1,7 +1,7 @@
 pico-8 cartridge // http://www.pico-8.com
 version 16
 __lua__
--- not sid meier's danmaku 0.24
+-- not sid meier's danmaku 0.25
 -- martin mauchauffee
 
 -- todo: add an input player
@@ -9,14 +9,6 @@ __lua__
 
 -- todo: fix boss pattern not
 -- stopped at next phase
-
--- todo: fix score is better when
--- die at boss
-
--- todo: score is too big in
--- boss part against ships part
-
--- more reward for long life ship
 
 -- todo: the blinking vesse effect
 -- activate with too far bullets
@@ -68,7 +60,7 @@ function dis(x,y,u,v)
 -- !b= ship/cannon hp
 -- !e= initial hp
 -- !z= frame live counter
--- !c= bullet shotted
+-- !c= bullet shooted
 -- !r= base score when shooted
 
 -- d,!e= frame delay,initial
@@ -779,9 +771,7 @@ b,r)
 function damage(h,v,qs)
  if boss then
   if bob>0 then
-   for i=1,6 do
-    sco(min(32000,h[i].c))
-   end
+   sco(1234)
    bob-=v
   elseif boa then
    -- fixme lerk can be nil
@@ -802,9 +792,7 @@ function damage(h,v,qs)
     local b=bo[i]
     if(b.q>0)qs[b.q].t=0
    end
-   for i=1,6 do
-    sco(max(0,32000-lez))
-   end
+   sco(32000)
   end
  elseif h.c then
   if h.b>0
@@ -826,7 +814,7 @@ function kill(h)
  sfx(5)
  h.b,h.m,h.a=0,none,false
  if(qs[h.q])qs[h.q].t=0
- sco(max(99,(h.c*333)-h.z+h.r))
+ sco(max(99,h.r+h.c*1000))
  if(h.q>0)qs[h.q].t=0
  if vep<uipo-3 then
   effect(h.x,h.y,hit(h.r))
@@ -886,24 +874,12 @@ function front(x,y,r,c,f)
 
 function sco(h)
  local i=8
- h=flr(h*(1+hitv/10))
- --printh("sco>32787")
- while h>0 do
-  a=h%10
-  if(scos[i]+a>9)h+=10
-  scos[i]=(scos[i]+a)%10
-  h=flr(h/10) i-=1
- end
- local b=false
- for i=1,8 do
-  if scos[i]>best[i] then
-   b=true
-  end
- end
- if b then
-  for i=1,8 do
-   best[i]=scos[i]
-   dset(i,scos[i])
+ for j=1,1+hitv do
+  while h>0 do
+   a=h%10
+   if(scos[i]+a>9)h+=10
+   scos[i]=(scos[i]+a)%10
+   h=flr(h/10) i-=1
   end
  end
 end
@@ -1104,6 +1080,18 @@ function win()
    yield()
   end
   if lea<768 then
+   local b=false
+   for i=1,8 do
+    if scos[i]>best[i] then
+     b=true
+    end
+   end
+   if b then
+    for i=1,8 do
+     best[i]=scos[i]
+     dset(i,scos[i])
+    end
+   end
    anim,scene=ranking(),title
    sfx(-1,0)music(1,10,7)
   else
