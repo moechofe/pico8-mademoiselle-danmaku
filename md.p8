@@ -1105,7 +1105,7 @@ function win()
   end
   if lea<768 then
    anim,scene=ranking(),title
-   music(1,0,7)
+   sfx(-1,0)music(1,10,7)
   else
    anim,scene,lea=false,play,768
   end
